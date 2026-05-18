@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <iostream>
 #include <vector>
 
@@ -8,22 +7,22 @@
 
 enum class NODETYPE
 {
-    CALL_EXPR, 
-    NUMBER_LITERAL, 
-    IDENT
+    CALL_EXPR,
+    NUMBER_LITERAL,
+    IDENT,
+    PRINT_STATEMENT
 };
-
 
 struct NODE
 {
     NODETYPE nodetype;
     std::string value;
-    std::vector <NODE>  child;
+    std::vector<NODE> child;
 };
-
 
 class parser
 {
-    public:
-    NODE parsecall(std::vector<Token>& tokens, int& i);
+public:
+    NODE parsecall(std::vector<Token> &tokens, int &i);
+    NODE parseprint(std::vector<Token> &tokens, int &i);
 };

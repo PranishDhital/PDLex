@@ -5,7 +5,8 @@
 #include <fstream>
 #include <cctype>
 
-enum class TOKENTYPE{
+enum class TOKENTYPE
+{
     NUMBER,
     SEMI,
     LPAREN,
@@ -18,6 +19,7 @@ enum class TOKENTYPE{
     DIVIDE,
 
     INT,
+    PRINT,
 
     END,
     UNDEFINED
@@ -29,15 +31,11 @@ struct Token
     std::string value;
 };
 
-
-
 class lexer
 {
-    public:
+public:
     Token getnextToken(std::ifstream &file);
-    void print(const Token& tok);
+    void print(const Token &tok);
 
-    private:
-
-    
+private:
 };
