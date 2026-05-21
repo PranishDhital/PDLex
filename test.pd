@@ -1,2 +1,5 @@
-// This is a first thing
+// This is a comment
+/*
+    This is a multi line comment
+*/
 print (hello world); 

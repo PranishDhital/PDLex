@@ -74,7 +74,7 @@ Token lexer::getnextToken(std::ifstream &file)
         return {TOKENTYPE::END, " "};
     }
 
-    // comments and divide
+    // for the comments and divide
     if (ch == '/')
     {
         if (file.peek() == '/')
@@ -84,6 +84,22 @@ Token lexer::getnextToken(std::ifstream &file)
             }
             return getnextToken(file);
         }
+        // for the multiline comments
+        else if (file.peek() == '*')
+        {
+            file.get(ch);
+            char prev = 0;
+            while (file.get(ch))
+            {
+                if (prev == '*' && ch == '/')
+                {
+                    break;
+                }
+                prev = ch;
+            }
+            return getnextToken(file);
+        }
+
         return {TOKENTYPE::DIVIDE, "/"};
     }
 

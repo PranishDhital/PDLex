@@ -9,20 +9,20 @@ NODE parser::parsecall(std::vector<Token> &tokens, int &i)
         return call;
     }
 
-    // Must start with an identifier (function name).
+    // Must start with an identifier (which is function name).
     if (tokens[i].type != TOKENTYPE::IDENT)
     {
         return call;
     }
 
-    // Only treat IDENT as a call if it's followed by '('.
+    // Only treat  the IDENT as a call if it's followed by the symblo '('.
     // Otherwise, don't consume anything so the caller can decide what to do.
     if (i + 1 >= static_cast<int>(tokens.size()) || tokens[i + 1].type != TOKENTYPE::LPAREN)
     {
         return call;
     }
 
-    // calling name
+    // calling the name
     call.value = tokens[i++].value;
 
     // skip LPAREN
