@@ -56,6 +56,13 @@ void lexer::print(const Token &tok)
         std::cout << "INT           : " << tok.value << "\n";
         break;
 
+    case TOKENTYPE::COMMA:
+        std::cout << "COMMA         : " << tok.value << " \n";
+        break;
+    case TOKENTYPE::EXCLAMATION:
+        std::cout << "EXCLAMATION   : " << tok.value << "\n";
+        break;
+
     default:
         std::cout << "UNKNOWN       : " << tok.value << "\n";
         break;
@@ -74,9 +81,37 @@ Token lexer::getnextToken(std::ifstream &file)
         return {TOKENTYPE::END, " "};
     }
 
+    switch (ch)
+    {
+    case ',':
+        return {TOKENTYPE::COMMA, ","};
+    case '+':
+        return {TOKENTYPE::PLUS, "+"};
+    case '-':
+        return {TOKENTYPE::MINUS, "-"};
+    case '*':
+        return {TOKENTYPE::MULTIPLY, "*"};
+    case '(':
+        return {TOKENTYPE::LPAREN, "("};
+    case ')':
+        return {TOKENTYPE::RPAREN, ")"};
+    case ';':
+        return {TOKENTYPE::SEMI, ";"};
+    case '=':
+        return {TOKENTYPE::EQUALSTO, "="};
+    case '!':
+        if (file.peek() == '=')
+        {
+            file.get(ch);
+            return {TOKENTYPE::NOTEQUAL, "!="};
+        }
+        return {TOKENTYPE::EXCLAMATION, "!"};
+    }
+
     // for the comments and divide
     if (ch == '/')
     {
+        // this is for the single line comments
         if (file.peek() == '/')
         {
             while (file.get(ch) && ch != '\n')
@@ -101,41 +136,6 @@ Token lexer::getnextToken(std::ifstream &file)
         }
 
         return {TOKENTYPE::DIVIDE, "/"};
-    }
-
-    if (ch == '+')
-    {
-        return {TOKENTYPE::PLUS, "+"};
-    }
-
-    if (ch == '-')
-    {
-        return {TOKENTYPE::MINUS, "-"};
-    }
-
-    if (ch == '*')
-    {
-        return {TOKENTYPE::MULTIPLY, "*"};
-    }
-
-    if (ch == '(')
-    {
-        return {TOKENTYPE::LPAREN, "("};
-    }
-
-    if (ch == ')')
-    {
-        return {TOKENTYPE::RPAREN, ")"};
-    }
-
-    if (ch == ';')
-    {
-        return {TOKENTYPE::SEMI, ";"};
-    }
-
-    if (ch == '=')
-    {
-        return {TOKENTYPE::EQUALSTO, "="};
     }
 
     // this is for characters

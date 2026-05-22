@@ -42,7 +42,7 @@ NODE parser::parsecall(std::vector<Token> &tokens, int &i)
             continue;
         }
 
-        if (tokens[i].type == TOKENTYPE::IDENT)
+        else if (tokens[i].type == TOKENTYPE::IDENT)
         {
             NODE arg;
             arg.nodetype = NODETYPE::IDENT;
@@ -103,8 +103,7 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
             std::cerr << "Error! Expected ')' " << "\n";
             return node;
         }
-
-        if (tokens[i].type == TOKENTYPE::NUMBER)
+        else if (tokens[i].type == TOKENTYPE::NUMBER)
         {
             NODE arg;
             arg.nodetype = NODETYPE::NUMBER_LITERAL;
@@ -113,8 +112,12 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
             i++;
             continue;
         }
-
-        if (tokens[i].type == TOKENTYPE::IDENT)
+        else if (tokens[i].type == TOKENTYPE::COMMA)
+        {
+            i++;
+            continue;
+        }
+        else if (tokens[i].type == TOKENTYPE::IDENT)
         {
             NODE arg;
             arg.nodetype = NODETYPE::IDENT;
@@ -123,14 +126,28 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
             i++;
             continue;
         }
+        else if (tokens[i].type == TOKENTYPE::EXCLAMATION)
+        {
+            i++;
+            continue;
+        }
         i++;
     }
 
-    if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::RPAREN)
+    if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RPAREN)
+    {
+        std::cerr << "Error! Expected ')'" << "\n";
+    }
+    else
     {
         i++;
     }
-    if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::SEMI)
+
+    if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
+    {
+        std::cerr << "Error! Expected ';' at the end" << "\n";
+    }
+    else
     {
         i++;
     }

@@ -18,6 +18,9 @@ enum class TOKENTYPE
     MINUS,
     MULTIPLY,
     DIVIDE,
+    COMMA,
+    NOTEQUAL,
+    EXCLAMATION,
 
     INT,
     PRINT,
