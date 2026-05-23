@@ -67,6 +67,7 @@ NODE parser::parsecall(std::vector<Token> &tokens, int &i)
     return call;
 }
 
+// Parse print statement
 NODE parser::parseprint(std::vector<Token> &tokens, int &i)
 {
     NODE node;
@@ -131,6 +132,11 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
             i++;
             continue;
         }
+        else if (tokens[i].type == TOKENTYPE::UNDEFINED)
+        {
+            i++;
+            continue;
+        }
         i++;
     }
 
@@ -141,6 +147,56 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
     else
     {
         i++;
+    }
+
+    if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
+    {
+        std::cerr << "Error! Expected ';' at the end" << "\n";
+    }
+    else
+    {
+        i++;
+    }
+
+    return node;
+}
+
+NODE parser::parseVar(std::vector<Token> &tokens, int &i)
+{
+    NODE node;
+    node.nodetype = NODETYPE::VARIABLE_DECLARATION;
+
+    if (i >= static_cast<int>(tokens.size()))
+    {
+        return node;
+    }
+
+    if (tokens[i].type != TOKENTYPE::INT)
+    {
+        return node;
+    }
+
+    i++;
+    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::IDENT)
+    {
+        std::cerr << "ERROR! Need to declare an variable" << "\n";
+        return node;
+    }
+    node.value = tokens[i].value;
+    i++;
+
+    if (static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::EQUALSTO)
+    {
+        i++;
+
+        if (i < static_cast<int>(tokens.size()))
+        {
+            NODE arg;
+            arg.nodetype = NODETYPE::VARIABLE_DECLARATION;
+            arg.value = tokens[i].value;
+            node.child.push_back(arg);
+            i++;
+        }
     }
 
     if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)

@@ -2,5 +2,5 @@
 /*
     This is a multi line comment
 */
-print (hello,world!);
-print (cutie);
+int a = 10;
+print (a);

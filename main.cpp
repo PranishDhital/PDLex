@@ -8,15 +8,14 @@
 #include <string>
 
 // to check if the file name has .pd
-bool pdExtension(const std::string& filename)
+bool pdExtension(const std::string &filename)
 {
-    if(filename.size() < 3) 
+    if (filename.size() < 3)
     {
         return false;
     }
-    return filename.substr(filename.size() -3 ) == ".pd";
+    return filename.substr(filename.size() - 3) == ".pd";
 }
-
 
 int main(int argc, char **argv)
 {
@@ -34,7 +33,7 @@ int main(int argc, char **argv)
 
     std::string filename = argv[1];
 
-    if(!pdExtension(filename))
+    if (!pdExtension(filename))
     {
         std::cerr << "Error! .pd files are only supported" << "\n";
         return 1;
@@ -61,6 +60,13 @@ int main(int argc, char **argv)
     // for multile exection
     while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::END)
     {
+        if (tokens[i].type == TOKENTYPE::INT)
+        {
+            NODE tree = parse.parseVar(tokens, i);
+            Interpert.interpret(tree);
+            continue;
+        }
+
         if (tokens[i].type == TOKENTYPE::PRINT)
         {
             NODE tree = parse.parseprint(tokens, i);
