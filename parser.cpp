@@ -126,7 +126,7 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
             i++;
             continue;
         }
-        else if (tokens[i].type == TOKENTYPE::STRING)
+        else if (tokens[i].type == TOKENTYPE::STRING_LITERAL)
         {
             NODE arg;
             arg.nodetype = NODETYPE::STRING_LITERAL;
@@ -175,7 +175,7 @@ NODE parser::parseVar(std::vector<Token> &tokens, int &i)
         return node;
     }
 
-    if (tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE)
+    if (tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE && tokens[i].type != TOKENTYPE::STRING)
     {
         return node;
     }
@@ -196,6 +196,7 @@ NODE parser::parseVar(std::vector<Token> &tokens, int &i)
 
         if (i < static_cast<int>(tokens.size()))
         {
+            // std::cerr << "DEBUGER parseVar: token type=" << (int)tokens[i].type << " value=" << tokens[i].value << "\n";
             NODE arg;
             if (tokens[i].type == TOKENTYPE::NUMBER)
             {
@@ -205,7 +206,7 @@ NODE parser::parseVar(std::vector<Token> &tokens, int &i)
             {
                 arg.nodetype = NODETYPE::IDENT;
             }
-            else if (tokens[i].type == TOKENTYPE::STRING)
+            else if (tokens[i].type == TOKENTYPE::STRING_LITERAL)
             {
                 arg.nodetype = NODETYPE::STRING_LITERAL;
             }

@@ -9,8 +9,12 @@
 int x = 10;
 int y = 20;
 double z = 40.2;
+string Name = "hi";
+
+
 print (x);
 print (y);
 print (z);
+print (Name);
 
 print("Hello,World!");

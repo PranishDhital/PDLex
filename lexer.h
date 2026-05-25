@@ -25,6 +25,7 @@ enum class TOKENTYPE
     INT,
     DOUBLE,
     PRINT,
+    STRING_LITERAL,
     STRING,
 
     END,

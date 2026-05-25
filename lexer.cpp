@@ -144,7 +144,7 @@ Token lexer::getnextToken(std::ifstream &file)
             }
             str.push_back(ch);
         }
-        return {TOKENTYPE::STRING, str};
+        return {TOKENTYPE::STRING_LITERAL, str};
     }
     }
 
@@ -201,6 +201,10 @@ Token lexer::getnextToken(std::ifstream &file)
         if (ident == "double")
         {
             return {TOKENTYPE::DOUBLE, ident};
+        }
+        if(ident == "string")
+        {
+            return {TOKENTYPE::STRING, ident};
         }
 
         if (ident == "print")

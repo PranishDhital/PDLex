@@ -36,8 +36,8 @@ void interpreter::interpret(const NODE &node)
             }
             else if (rhs.nodetype == NODETYPE::STRING_LITERAL)
             {
-                std::cerr << "Runtime Error: cannot assign string to int " << node.value << "\n";
-                return;
+                // std::cerr << "Runtime Error: cannot assign string to int " << node.value << "\n";
+                value  = rhs.value;
             }
         }
 
