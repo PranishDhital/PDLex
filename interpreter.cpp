@@ -1,6 +1,6 @@
 #include "interpreter.h"
 
-using Value = std::variant<std::string, int, double>;
+using Value = std::variant<std::string, int, double, bool>;
 
 void interpreter::interpret(const NODE &node)
 {
@@ -39,6 +39,10 @@ void interpreter::interpret(const NODE &node)
                 // std::cerr << "Runtime Error: cannot assign string to int " << node.value << "\n";
                 value  = rhs.value;
             }
+            else if (rhs.nodetype == NODETYPE::BOOLEAN_LITERAL)
+            {
+                value = (rhs.value == "true");
+            }
         }
 
         variables[node.value] = value;
@@ -65,6 +69,10 @@ void interpreter::interpret(const NODE &node)
                 std::cout << arg.value;
             }
             else if (arg.nodetype == NODETYPE::NUMBER_LITERAL)
+            {
+                std::cout << arg.value;
+            }
+            else if (arg.nodetype == NODETYPE::BOOLEAN_LITERAL)
             {
                 std::cout << arg.value;
             }

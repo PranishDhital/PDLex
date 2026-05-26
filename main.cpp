@@ -1,6 +1,6 @@
 #include "lexer.h"
 #include "interpreter.h"
-#include "parser.h"
+#include "AST.h"
 
 #include <iostream>
 #include <fstream>
@@ -21,7 +21,7 @@ bool pdExtension(const std::string& filename)
 int main(int argc, char **argv)
 {
     lexer Lexer;
-    parser parse;
+    AST ast;
     interpreter Interpert;
 
     if (argc < 2)
@@ -61,16 +61,16 @@ int main(int argc, char **argv)
     // for multile exection
     while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::END)
     {
-        if (tokens[i].type == TOKENTYPE::INT || tokens[i].type == TOKENTYPE::DOUBLE || tokens[i].type == TOKENTYPE::STRING)
+        if (tokens[i].type == TOKENTYPE::INT || tokens[i].type == TOKENTYPE::DOUBLE || tokens[i].type == TOKENTYPE::STRING || tokens[i].type == TOKENTYPE::BOOLEAN)
         {
-            NODE tree = parse.parseVar(tokens, i);
+            NODE tree = ast.parseVar(tokens, i);
             Interpert.interpret(tree);
             continue;
         }
 
         if (tokens[i].type == TOKENTYPE::PRINT)
         {
-            NODE tree = parse.parseprint(tokens, i);
+            NODE tree = ast.parseprint(tokens, i);
             Interpert.interpret(tree);
             continue;
         }
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
             // Only a call expression if followed by '('
             if (i + 1 < static_cast<int>(tokens.size()) && tokens[i + 1].type == TOKENTYPE::LPAREN)
             {
-                NODE tree = parse.parsecall(tokens, i);
+                NODE tree = ast.parsecall(tokens, i);
                 Interpert.interpret(tree);
                 continue;
             }

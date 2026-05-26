@@ -62,6 +62,9 @@ void lexer::print(const Token &tok)
     case TOKENTYPE::EXCLAMATION:
         std::cout << "EXCLAMATION   : " << tok.value << "\n";
         break;
+    case TOKENTYPE::BOOL_LITERAL:
+        std::cout << "BOOL_LITERAL  : " << tok.value << "\n";
+        break;
 
     default:
         std::cout << "UNKNOWN       : " << tok.value << "\n";
@@ -198,16 +201,23 @@ Token lexer::getnextToken(std::ifstream &file)
         {
             return {TOKENTYPE::INT, ident};
         }
-        if (ident == "double")
+        else if (ident == "double")
         {
             return {TOKENTYPE::DOUBLE, ident};
         }
-        if(ident == "string")
+        else if(ident == "string")
         {
             return {TOKENTYPE::STRING, ident};
         }
-
-        if (ident == "print")
+        else if(ident == "bool")
+        {
+            return {TOKENTYPE::BOOLEAN, ident};
+        }
+        else if (ident == "true" || ident == "false")
+        {
+            return {TOKENTYPE::BOOL_LITERAL, ident};
+        }
+        else if (ident == "print")
         {
             return {TOKENTYPE::PRINT, ident};
         }

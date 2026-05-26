@@ -27,6 +27,8 @@ enum class TOKENTYPE
     PRINT,
     STRING_LITERAL,
     STRING,
+    BOOLEAN,
+    BOOL_LITERAL,
 
     END,
     UNDEFINED

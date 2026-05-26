@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "lexer.h"
 
@@ -11,6 +12,7 @@ enum class NODETYPE
     NUMBER_LITERAL,
     STRING_LITERAL,
     DOUBLE_LITERAL,
+    BOOLEAN_LITERAL,
     IDENT,
     PRINT_STATEMENT,
     VARIABLE_DECLARATION
@@ -23,7 +25,7 @@ struct NODE
     std::vector<NODE> child;
 };
 
-class parser
+class AST
 {
 public:
     NODE parsecall(std::vector<Token> &tokens, int &i);

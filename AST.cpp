@@ -1,6 +1,6 @@
-#include "parser.h"
+#include "AST.h"
 
-NODE parser::parsecall(std::vector<Token> &tokens, int &i)
+NODE AST::parsecall(std::vector<Token> &tokens, int &i)
 {
     NODE call;
     call.nodetype = NODETYPE::CALL_EXPR;
@@ -41,6 +41,15 @@ NODE parser::parsecall(std::vector<Token> &tokens, int &i)
             i++;
             continue;
         }
+        else if (tokens[i].type == TOKENTYPE::BOOL_LITERAL)
+        {
+            NODE arg;
+            arg.nodetype = NODETYPE::BOOLEAN_LITERAL;
+            arg.value = tokens[i].value;
+            call.child.push_back(arg);
+            i++;
+            continue;
+        }
 
         else if (tokens[i].type == TOKENTYPE::IDENT)
         {
@@ -67,7 +76,7 @@ NODE parser::parsecall(std::vector<Token> &tokens, int &i)
     return call;
 }
 
-NODE parser::parseprint(std::vector<Token> &tokens, int &i)
+NODE AST::parseprint(std::vector<Token> &tokens, int &i)
 {
     NODE node;
     node.nodetype = NODETYPE::PRINT_STATEMENT;
@@ -135,6 +144,15 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
             i++;
             continue;
         }
+        else if (tokens[i].type == TOKENTYPE::BOOL_LITERAL)
+        {
+            NODE arg;
+            arg.nodetype = NODETYPE::BOOLEAN_LITERAL;
+            arg.value = tokens[i].value;
+            node.child.push_back(arg);
+            i++;
+            continue;
+        }
         else if (tokens[i].type == TOKENTYPE::EXCLAMATION)
         {
             i++;
@@ -165,7 +183,7 @@ NODE parser::parseprint(std::vector<Token> &tokens, int &i)
 }
 
 // parse variables
-NODE parser::parseVar(std::vector<Token> &tokens, int &i)
+NODE AST::parseVar(std::vector<Token> &tokens, int &i)
 {
     NODE node;
     node.nodetype = NODETYPE::VARIABLE_DECLARATION;
@@ -175,7 +193,7 @@ NODE parser::parseVar(std::vector<Token> &tokens, int &i)
         return node;
     }
 
-    if (tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE && tokens[i].type != TOKENTYPE::STRING)
+    if (tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE && tokens[i].type != TOKENTYPE::STRING && tokens[i].type != TOKENTYPE::BOOLEAN)
     {
         return node;
     }
@@ -190,7 +208,7 @@ NODE parser::parseVar(std::vector<Token> &tokens, int &i)
     node.value = tokens[i].value;
     i++;
 
-    if (static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::EQUALSTO)
+    if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::EQUALSTO)
     {
         i++;
 
@@ -213,6 +231,10 @@ NODE parser::parseVar(std::vector<Token> &tokens, int &i)
             else if (tokens[i].type == TOKENTYPE::DOUBLE)
             {
                 arg.nodetype = NODETYPE::DOUBLE_LITERAL;
+            }
+            else if (tokens[i].type == TOKENTYPE::BOOL_LITERAL)
+            {
+                arg.nodetype = NODETYPE::BOOLEAN_LITERAL;
             }
             else
             {

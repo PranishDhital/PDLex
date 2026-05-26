@@ -10,11 +10,14 @@ int x = 10;
 int y = 20;
 double z = 40.2;
 string Name = "hi";
+bool isgood = true;
 
 
 print (x);
 print (y);
 print (z);
 print (Name);
+print (isgood);         // prints 1 as true and 0 and false
+
 
 print("Hello,World!");

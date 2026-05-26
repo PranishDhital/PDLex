@@ -5,7 +5,7 @@
 #include <map>
 #include <variant>
 
-#include "parser.h"
+#include "AST.h"
 
 class interpreter
 {
@@ -13,5 +13,5 @@ public:
     void interpret(const NODE &node);
 
 private:
-    std::map<std::string, std::variant<std::string, int, double>> variables;
+    std::map<std::string, std::variant<std::string, int, double, bool>> variables;
 };
