@@ -269,7 +269,7 @@ NODE AST::parseExpr(std::vector<Token> &tokens, int &i)
     NODE left = parsePrimary(tokens, i); // the left side
 
     while (i < static_cast<int>(tokens.size()) &&
-           (tokens[i].type == TOKENTYPE::PLUS || tokens[i].type == TOKENTYPE::MINUS || tokens[i].type == TOKENTYPE::MULTIPLY || tokens[i].type == TOKENTYPE::DIVIDE))
+           (tokens[i].type == TOKENTYPE::PLUS || tokens[i].type == TOKENTYPE::MINUS || tokens[i].type == TOKENTYPE::MULTIPLY || tokens[i].type == TOKENTYPE::DIVIDE || tokens[i].type == TOKENTYPE::PERCENTAGE))
     {
         std::string op = tokens[i].value;
         i++;

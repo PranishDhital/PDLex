@@ -21,6 +21,7 @@ enum class TOKENTYPE
     COMMA,
     NOTEQUAL,
     EXCLAMATION,
+    PERCENTAGE,
 
     INT,
     DOUBLE,

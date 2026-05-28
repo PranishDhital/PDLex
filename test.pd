@@ -3,7 +3,13 @@
 // This is a single line comment
 
 /*
-    this is a multi-line comment
+    when every some one prints it prints out in int even if the sum has a double in it, i.e
+    
+    int sum = 10.2 + 2;
+    print (sum);
+
+    OUTPUT:
+    12
 */
 
 int x = 10;
@@ -16,6 +22,7 @@ bool isgood = true;
 int sum = 10 + 10;
 int add = x + y  + 10.2;
 int subraction =  x - y;
+int mod = 10 % 7;
 
 print (x);
 print (y);
@@ -25,6 +32,7 @@ print ("hi," Name);
 print ("The sum is : " sum);
 print("The sum is : " add);
 print ("Minus : " subraction);
+print ("MOD : " mod);
 print (isgood);         // prints 1 as true and 0 and false
 
 

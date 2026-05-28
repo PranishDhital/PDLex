@@ -65,6 +65,9 @@ void lexer::print(const Token &tok)
     case TOKENTYPE::BOOL_LITERAL:
         std::cout << "BOOL_LITERAL  : " << tok.value << "\n";
         break;
+    case TOKENTYPE::PERCENTAGE:
+        std::cout << "PERCENTAGE    : " << tok.value << "\n";
+        break;
 
     default:
         std::cout << "UNKNOWN       : " << tok.value << "\n";
@@ -102,6 +105,10 @@ Token lexer::getnextToken(std::ifstream &file)
         return {TOKENTYPE::SEMI, ";"};
     case '=':
         return {TOKENTYPE::EQUALSTO, "="};
+
+    case '%':
+        return {TOKENTYPE::PERCENTAGE, "%"};
+
     case '!':
         if (file.peek() == '=')
         {
@@ -205,11 +212,11 @@ Token lexer::getnextToken(std::ifstream &file)
         {
             return {TOKENTYPE::DOUBLE, ident};
         }
-        else if(ident == "string")
+        else if (ident == "string")
         {
             return {TOKENTYPE::STRING, ident};
         }
-        else if(ident == "bool")
+        else if (ident == "bool")
         {
             return {TOKENTYPE::BOOLEAN, ident};
         }

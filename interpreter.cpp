@@ -144,7 +144,7 @@ int interpreter::evalexpr(const NODE &node)
     {
         if (variables.find(node.value) == variables.end())
         {
-            std::cerr << "Runtime Error! undefined variable '" << node.value << "'\n";
+            std::cerr << "Runtime Error! undefined variable '" << node.value << "\n";
             return 0; // safely fallback, don't proceed to stoi
         }
         return to_int(variables[node.value]);
@@ -159,15 +159,19 @@ int interpreter::evalexpr(const NODE &node)
         {
             return left + right;
         }
-        if (node.value == "-")
+        else if (node.value == "-")
         {
             return left - right;
         }
-        if (node.value == "*")
+        else if (node.value == "*")
         {
             return left * right;
         }
-        if (node.value == "/")
+        else if (node.value == "%")
+        {
+            return left % right;
+        }
+        else if (node.value == "/")
         {
             if (right == 0)
             {
