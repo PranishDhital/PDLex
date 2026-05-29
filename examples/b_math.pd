@@ -1,0 +1,29 @@
+/*
+	This file only consist of checking whether the toy interperter can do some basic math
+*/
+
+int x = 10;
+int y = 10;
+int z = 7;
+
+int sum = x + y;
+int multi = x * y * z;
+int mod = x % z;
+int sub = x - z;
+int div = x / y;
+
+
+
+// printing 
+print ("------------------------B_Math Result----------------------------------");
+
+print ("X = " x);
+print ("Y = " y);
+print ("Z = " z);
+print ("Sum of " x " and " y " = " sum);
+print ("Multiplication of " x "," y " and " z " = " multi);
+print ("Mod % of " x " and " z " = " mod);
+print ("Subraction of " x " and " z " = " sub);
+print ("Division of " x " and " y " = " div);
+
+print ("------------------------B_Math Finish----------------------------------");

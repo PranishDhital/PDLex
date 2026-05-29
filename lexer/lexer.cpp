@@ -228,6 +228,10 @@ Token lexer::getnextToken(std::ifstream &file)
         {
             return {TOKENTYPE::PRINT, ident};
         }
+        else if (ident == "input")
+        {
+            return { TOKENTYPE::INPUT, ident };
+        }
 
         return {TOKENTYPE::IDENT, ident};
     }

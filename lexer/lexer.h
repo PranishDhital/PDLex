@@ -30,6 +30,7 @@ enum class TOKENTYPE
     STRING,
     BOOLEAN,
     BOOL_LITERAL,
+    INPUT,
 
     END,
     UNDEFINED

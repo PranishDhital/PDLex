@@ -24,6 +24,12 @@ int add = x + y  + 10.2;
 int subraction =  x - y;
 int mod = 10 % 7;
 
+// int user_input = 0;
+// int user_name = 0;
+// input (user_input);
+// input (user_name);
+
+
 print (x);
 print (y);
 print (z);
