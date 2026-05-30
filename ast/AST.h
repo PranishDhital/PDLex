@@ -5,6 +5,7 @@
 #include <string>
 
 #include "lexer.h"
+#include "../error/error.h"
 
 enum class NODETYPE
 {
@@ -24,6 +25,7 @@ struct NODE
 	NODETYPE nodetype;
 	std::string value;
 	std::vector<NODE> child;
+	int line;
 };
 
 class AST
@@ -37,4 +39,5 @@ public:
 	NODE parseReassign(std::vector<Token>& tokens, int& i);
 
 private:
+	errors errorHandler;
 };

@@ -14,7 +14,7 @@ add_executable(ppi
     ast/AST.cpp
     lexer/lexer.cpp
     interperter/interpreter.cpp
-)
+ "error/error.h" "error/error.cpp")
 
 target_include_directories(ppi PRIVATE
     ${CMAKE_SOURCE_DIR}

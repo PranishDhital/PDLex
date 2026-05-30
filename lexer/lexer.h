@@ -40,12 +40,13 @@ struct Token
 {
     TOKENTYPE type;
     std::string value;
+    int line;
 };
 
 class lexer
 {
 public:
-    Token getnextToken(std::ifstream &file);
+    Token getnextToken(std::ifstream &file, int& line);
     void print(const Token &tok);
 
 private:

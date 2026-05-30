@@ -75,47 +75,52 @@ void lexer::print(const Token &tok)
     };
 }
 
-Token lexer::getnextToken(std::ifstream &file)
+Token lexer::getnextToken(std::ifstream &file, int& line)
 {
     char ch;
 
     while (file.get(ch) && std::isspace(static_cast<unsigned char>(ch)))
-        ;
+    {
+        if (ch == '\n')
+        {
+            line++;
+        }
+    }
 
     if (!file)
     {
-        return {TOKENTYPE::END, " "};
+        return {TOKENTYPE::END, " ", line};
     }
 
     switch (ch)
     {
     case ',':
-        return {TOKENTYPE::COMMA, ","};
+        return {TOKENTYPE::COMMA, ",", line};
     case '+':
-        return {TOKENTYPE::PLUS, "+"};
+        return {TOKENTYPE::PLUS, "+", line};
     case '-':
-        return {TOKENTYPE::MINUS, "-"};
+        return {TOKENTYPE::MINUS, "-",line};
     case '*':
-        return {TOKENTYPE::MULTIPLY, "*"};
+        return {TOKENTYPE::MULTIPLY, "*",line};
     case '(':
-        return {TOKENTYPE::LPAREN, "("};
+        return {TOKENTYPE::LPAREN, "(", line};
     case ')':
-        return {TOKENTYPE::RPAREN, ")"};
+        return {TOKENTYPE::RPAREN, ")", line};
     case ';':
-        return {TOKENTYPE::SEMI, ";"};
+        return {TOKENTYPE::SEMI, ";", line};
     case '=':
-        return {TOKENTYPE::EQUALSTO, "="};
+        return {TOKENTYPE::EQUALSTO, "=",line};
 
     case '%':
-        return {TOKENTYPE::PERCENTAGE, "%"};
+        return {TOKENTYPE::PERCENTAGE, "%", line};
 
     case '!':
         if (file.peek() == '=')
         {
             file.get(ch);
-            return {TOKENTYPE::NOTEQUAL, "!="};
+            return {TOKENTYPE::NOTEQUAL, "!=", line};
         }
-        return {TOKENTYPE::EXCLAMATION, "!"};
+        return {TOKENTYPE::EXCLAMATION, "!", line};
 
     case '"':
     {
@@ -154,7 +159,7 @@ Token lexer::getnextToken(std::ifstream &file)
             }
             str.push_back(ch);
         }
-        return {TOKENTYPE::STRING_LITERAL, str};
+        return {TOKENTYPE::STRING_LITERAL, str, line};
     }
     }
 
@@ -167,7 +172,11 @@ Token lexer::getnextToken(std::ifstream &file)
             while (file.get(ch) && ch != '\n')
             {
             }
-            return getnextToken(file);
+            if (ch == '\n')
+            {
+                line++;
+            }
+            return getnextToken(file, line);
         }
         // for the multiline comments
         else if (file.peek() == '*')
@@ -176,16 +185,20 @@ Token lexer::getnextToken(std::ifstream &file)
             char prev = 0;
             while (file.get(ch))
             {
+                if (ch == '\n')
+                {
+                    line++;
+                }
                 if (prev == '*' && ch == '/')
                 {
                     break;
                 }
                 prev = ch;
             }
-            return getnextToken(file);
+            return getnextToken(file, line);
         }
 
-        return {TOKENTYPE::DIVIDE, "/"};
+        return {TOKENTYPE::DIVIDE, "/", line};
     }
 
     // this is for characters
@@ -206,34 +219,34 @@ Token lexer::getnextToken(std::ifstream &file)
 
         if (ident == "int")
         {
-            return {TOKENTYPE::INT, ident};
+            return {TOKENTYPE::INT, ident, line};
         }
         else if (ident == "double")
         {
-            return {TOKENTYPE::DOUBLE, ident};
+            return {TOKENTYPE::DOUBLE, ident, line};
         }
         else if (ident == "string")
         {
-            return {TOKENTYPE::STRING, ident};
+            return {TOKENTYPE::STRING, ident, line};
         }
         else if (ident == "bool")
         {
-            return {TOKENTYPE::BOOLEAN, ident};
+            return {TOKENTYPE::BOOLEAN, ident, line};
         }
         else if (ident == "true" || ident == "false")
         {
-            return {TOKENTYPE::BOOL_LITERAL, ident};
+            return {TOKENTYPE::BOOL_LITERAL, ident, line};
         }
         else if (ident == "print")
         {
-            return {TOKENTYPE::PRINT, ident};
+            return {TOKENTYPE::PRINT, ident, line};
         }
         else if (ident == "input")
         {
-            return { TOKENTYPE::INPUT, ident };
+            return { TOKENTYPE::INPUT, ident, line };
         }
 
-        return {TOKENTYPE::IDENT, ident};
+        return {TOKENTYPE::IDENT, ident, line};
     }
 
     // for the numbers
@@ -261,8 +274,8 @@ Token lexer::getnextToken(std::ifstream &file)
             file.unget();
         }
 
-        return {TOKENTYPE::NUMBER, num};
+        return {TOKENTYPE::NUMBER, num, line};
     }
 
-    return {TOKENTYPE::UNDEFINED, std::string(1, ch)};
+    return {TOKENTYPE::UNDEFINED, std::string(1, ch), line};
 }

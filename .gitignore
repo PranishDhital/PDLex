@@ -36,6 +36,8 @@ ipch/
 *.db
 *.opendb
 *.vcxproj.filters
+*.ilk
+*.pdb
 
 # macOS
 .DS_Store

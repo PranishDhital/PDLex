@@ -73,7 +73,7 @@ void interpreter::interpret(const NODE &node)
             {
                 if (variables.find(rhs.value) == variables.end())
                 {
-                    std::cerr << "Runtime Error: undefined variable " << rhs.value << "\n";
+                    errorHandler.runtimeError("undefined variable '" + rhs.value + "'", node.line);
                     return;
                 }
                 value = variables[rhs.value];
@@ -102,7 +102,7 @@ void interpreter::interpret(const NODE &node)
             {
                 if (variables.find(arg.value) == variables.end())
                 {
-                    std::cerr << "Runtime Error: undefined variable " << arg.value << "\n";
+                    errorHandler.runtimeError("undefined variable '" + arg.value + "'", node.line);
                     return;
                 }
                 std::visit([](auto v)
@@ -144,7 +144,7 @@ int interpreter::evalexpr(const NODE &node)
     {
         if (variables.find(node.value) == variables.end())
         {
-            std::cerr << "Runtime Error! undefined variable '" << node.value << "\n";
+            errorHandler.runtimeError("undefined variable '" + node.value + "'", node.line);
             return 0; // safely fallback, don't proceed to stoi
         }
         return to_int(variables[node.value]);
@@ -175,17 +175,17 @@ int interpreter::evalexpr(const NODE &node)
         {
             if (right == 0)
             {
-                std::cerr << "Runtime Error! division by zero\n";
+                errorHandler.runtimeError("division by zero", node.line);
                 return 0;
             }
             return left / right;
         }
-        std::cerr << "Runtime Error! unknown operator '" << node.value << "'\n";
+        errorHandler.runtimeError("unknown operator '" + node.value + "'", node.line);
         return 0;
     }
 
     default:
-        std::cerr << "Runtime Error! unexpected node in expression\n";
+        errorHandler.runtimeError("unexpected node in expression", node.line);
         return 0;
     }
 }

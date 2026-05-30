@@ -23,7 +23,9 @@ NODE AST::parsecall(std::vector<Token>& tokens, int& i)
 	}
 
 	// calling the name
-	call.value = tokens[i++].value;
+	call.value = tokens[i].value;
+	call.line = tokens[i].line;
+	i++;
 
 	// skip LPAREN
 	i++;
@@ -92,12 +94,13 @@ NODE AST::parseprint(std::vector<Token>& tokens, int& i)
 	}
 
 	node.value = tokens[i].value;
+	node.line = tokens[i].line;
 	i++;
 
 	// skiping lparen
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
 	{
-		std::cerr << "Error! Expected '(' " << "\n";
+		errorHandler.syntaxError("Expected '('" , node.line);
 		return node;
 	}
 	else
@@ -109,7 +112,7 @@ NODE AST::parseprint(std::vector<Token>& tokens, int& i)
 	{
 		if (tokens[i].type == TOKENTYPE::END)
 		{
-			std::cerr << "Error! Expected ')' " << "\n";
+			errorHandler.syntaxError("Expected ')'" , tokens[i].line);
 			return node;
 		}
 		else if (tokens[i].type == TOKENTYPE::NUMBER)
@@ -163,7 +166,7 @@ NODE AST::parseprint(std::vector<Token>& tokens, int& i)
 
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RPAREN)
 	{
-		std::cerr << "Error! Expected ')'" << "\n";
+		errorHandler.syntaxError("Expected ')'", tokens[i].line);
 	}
 	else
 	{
@@ -172,7 +175,7 @@ NODE AST::parseprint(std::vector<Token>& tokens, int& i)
 
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
 	{
-		std::cerr << "Error! Expected ';' at the end" << "\n";
+		errorHandler.syntaxError("Expected ';' at the end" , tokens[i].line);
 	}
 	else
 	{
@@ -203,10 +206,11 @@ NODE AST::parseVar(std::vector<Token>& tokens, int& i)
 
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::IDENT)
 	{
-		std::cerr << "ERROR! Need to declare an variable" << "\n";
+		errorHandler.syntaxError("Need to declare a variable", node.line);
 		return node;
 	}
 	node.value = tokens[i].value;
+	node.line = tokens[i].line;
 	i++;
 
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::EQUALSTO)
@@ -218,7 +222,7 @@ NODE AST::parseVar(std::vector<Token>& tokens, int& i)
 	}
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
 	{
-		std::cerr << "Error! Expected ';' at the end\n";
+		errorHandler.syntaxError("Expected ';' at the end", tokens[i].line);
 	}
 	else
 	{
@@ -236,6 +240,7 @@ NODE AST::parsePrimary(std::vector<Token>& tokens, int& i)
 	{
 		node.nodetype = NODETYPE::NUMBER_LITERAL;
 		node.value = tokens[i].value;
+		node.line = tokens[i].line;
 		i++;
 		return node;
 	}
@@ -243,6 +248,7 @@ NODE AST::parsePrimary(std::vector<Token>& tokens, int& i)
 	{
 		node.nodetype = NODETYPE::STRING_LITERAL;
 		node.value = tokens[i].value;
+		node.line = tokens[i].line;
 		i++;
 		return node;
 	}
@@ -250,6 +256,7 @@ NODE AST::parsePrimary(std::vector<Token>& tokens, int& i)
 	{
 		node.nodetype = NODETYPE::BOOLEAN_LITERAL;
 		node.value = tokens[i].value;
+		node.line = tokens[i].line;
 		i++;
 		return node;
 	}
@@ -257,6 +264,7 @@ NODE AST::parsePrimary(std::vector<Token>& tokens, int& i)
 	{
 		node.nodetype = NODETYPE::IDENT;
 		node.value = tokens[i].value;
+		node.line = tokens[i].line;
 		i++;
 		return node;
 	}
@@ -272,6 +280,7 @@ NODE AST::parseExpr(std::vector<Token>& tokens, int& i)
 		(tokens[i].type == TOKENTYPE::PLUS || tokens[i].type == TOKENTYPE::MINUS || tokens[i].type == TOKENTYPE::MULTIPLY || tokens[i].type == TOKENTYPE::DIVIDE || tokens[i].type == TOKENTYPE::PERCENTAGE))
 	{
 		std::string op = tokens[i].value;
+		int opLine = tokens[i].line;
 		i++;
 
 		NODE right = parsePrimary(tokens, i); // get the right side
@@ -279,6 +288,7 @@ NODE AST::parseExpr(std::vector<Token>& tokens, int& i)
 		NODE expr;
 		expr.nodetype = NODETYPE::BINARY_OP;
 		expr.value = op;
+		expr.line = opLine;
 		expr.child.push_back(left);  // the left side
 		expr.child.push_back(right); // the right side in the tree
 
@@ -298,12 +308,13 @@ NODE AST::parseReassign(std::vector<Token>& tokens, int& i)
 
 	// grab variables name
 	node.value = tokens[i].value;
+	node.line = tokens[i].line;
 	i++; // skip the IDENT
 
 	// skip '='
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::EQUALSTO)
 	{
-		std::cerr << "Error! Expected '=' after variable name " << "\n";
+		errorHandler.syntaxError("Expected '=' after variable name", node.line);
 		return node;
 	}
 	i++; // skip '='
@@ -314,7 +325,7 @@ NODE AST::parseReassign(std::vector<Token>& tokens, int& i)
 	// expect a ';'
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
 	{
-		std::cerr << "Error! Expected ';'" << "\n ";
+		errorHandler.syntaxError("Expected ';'", tokens[i].line);
 	}
 	else
 	{

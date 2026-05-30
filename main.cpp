@@ -42,9 +42,10 @@ int main(int argc, char **argv)
 
     Token tok;
     std::vector<Token> tokens;
+    int line = 1;
     do
     {
-        tok = Lexer.getnextToken(file);
+        tok = Lexer.getnextToken(file, line);
         tokens.push_back(tok);
     } while (tok.type != TOKENTYPE::END);
 
