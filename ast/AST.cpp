@@ -85,6 +85,7 @@ NODE AST::parseprint( const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::PRINT_STATEMENT;
+	node.line   = tokens[i].line;
 
 	if (i >= static_cast<int>(tokens.size()))
 	{
@@ -188,6 +189,7 @@ NODE AST::parseVar(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::VARIABLE_DECLARATION;
+	node.line = tokens[i].line;
 
 	if (i >= static_cast<int>(tokens.size()))
 	{
@@ -323,7 +325,6 @@ NODE AST::parsePrimary(const std::vector<Token>& tokens, int& i)
 
 		return node;
 	}
-
 	return node;
 }
 
@@ -357,6 +358,7 @@ NODE AST::parseReassign(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::VARIABLE_DECLARATION; // reuse the  same node type
+	node.line = tokens[i].line;
 
 	if (i >= static_cast<int>(tokens.size())) {
 		return node;
@@ -409,8 +411,7 @@ NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
 	i++; // skip '('
 
 	// Check what's inside: could be IDENT, STRING_LITERAL, or both
-	std::string variableName;
-	std::string prompt;
+	std::string variableName, prompt;
 
 	// First element: could be variable name OR prompt string
 	if (tokens[i].type == TOKENTYPE::IDENT)

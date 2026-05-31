@@ -13,6 +13,11 @@ int sub = x - z;
 int div = x / y;
 
 
+double a = 1.1;
+double b = 1.1;
+double c = a + b;
+
+
 
 // printing 
 print ("------------------------B_Math Result----------------------------------");
@@ -25,5 +30,6 @@ print ("Multiplication of " x "," y " and " z " = " multi);
 print ("Mod % of " x " and " z " = " mod);
 print ("Subraction of " x " and " z " = " sub);
 print ("Division of " x " and " y " = " div);
+print ("Double addition : " c );
 
 print ("------------------------B_Math Finish----------------------------------");

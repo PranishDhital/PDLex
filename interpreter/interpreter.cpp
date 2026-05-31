@@ -136,17 +136,14 @@ Value interpreter::evaluateNode(const NODE &node)
     }
     else if (node.nodetype == NODETYPE::NUMBER_LITERAL)
     {
-        if (node.value.find('.') != std::string::npos)
+        if (node.value.find('.') != std::string::npos) {
             return std::stod(node.value);
+        }
         return std::stoi(node.value);
     }
     else if (node.nodetype == NODETYPE::STRING_LITERAL)
     {
         return node.value;
-    }
-    else if (node.nodetype == NODETYPE::BOOLEAN_LITERAL)
-    {
-        return (node.value == "true");
     }
     else if (node.nodetype == NODETYPE::BINARY_OP)
     {
@@ -157,6 +154,7 @@ Value interpreter::evaluateNode(const NODE &node)
         return node.value;
     }
 }
+
 
 void interpreter::interpret(const NODE &node)
 {
@@ -191,7 +189,7 @@ void interpreter::interpret(const NODE &node)
         variable_types[node.value] = declaredType;
 
         // If there's an initialization expression, evaluate it
-        // It will be at child[1] now (child[0] is the type)
+        // if it will be at child[1] now (child[0] is the type)
         if (node.child.size() > 1)
         {
             const NODE &rhs = node.child[1];

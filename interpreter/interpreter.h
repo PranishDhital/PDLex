@@ -13,7 +13,7 @@ class interpreter
 {
 public:
     void interpret(const NODE &node);
-    bool hasError() const { return error_occurred; }
+    [[nodiscard]] bool hasError() const { return error_occurred; }
     void clearError() { error_occurred = false; }
 
 private:

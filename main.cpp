@@ -24,17 +24,17 @@ void processTokens(const std::vector<Token>& tokens, AST& ast, interpreter& inte
             tokens[i].type == TOKENTYPE::STRING ||
             tokens[i].type == TOKENTYPE::BOOLEAN)
         {
-            NODE tree = ast.parseVar(tokens, i);
+            NODE tree = AST::parseVar(tokens, i);
             interp.interpret(tree);
         }
         else if (tokens[i].type == TOKENTYPE::PRINT)
         {
-            NODE tree = ast.parseprint(tokens, i);
+            NODE tree = AST::parseprint(tokens, i);
             interp.interpret(tree);
         }
         else if (tokens[i].type == TOKENTYPE::INPUT)
         {
-            NODE tree = ast.parseInput(tokens, i);
+            NODE tree = AST::parseInput(tokens, i);
             interp.interpret(tree);
         }
         else if (tokens[i].type == TOKENTYPE::IDENT)
@@ -42,13 +42,13 @@ void processTokens(const std::vector<Token>& tokens, AST& ast, interpreter& inte
             if (i + 1 < static_cast<int>(tokens.size()) &&
                 tokens[i + 1].type == TOKENTYPE::EQUALSTO)
             {
-                NODE tree = ast.parseReassign(tokens, i);
+                NODE tree = AST::parseReassign(tokens, i);
                 interp.interpret(tree);
             }
             else if (i + 1 < static_cast<int>(tokens.size()) &&
                      tokens[i + 1].type == TOKENTYPE::LPAREN)
             {
-                NODE tree = ast.parsecall(tokens, i);
+                NODE tree = AST::parsecall(tokens, i);
                 interp.interpret(tree);
             }
             else
@@ -67,7 +67,6 @@ void processTokens(const std::vector<Token>& tokens, AST& ast, interpreter& inte
 
 int main(int argc, char **argv)
 {
-    lexer Lexer;
     AST ast;
     interpreter Interpert;
 
@@ -92,7 +91,7 @@ int main(int argc, char **argv)
     }
 
 
-    ast.setFilename(filename);
+    AST::setFilename(filename);
 
     Token tok;
     std::vector<Token> tokens;
@@ -100,7 +99,7 @@ int main(int argc, char **argv)
 
     do
     {
-        tok = Lexer.getnextToken(file, line);
+        tok = lexer::getnextToken(file, line);
         tokens.push_back(tok);
     } while (tok.type != TOKENTYPE::END);
 

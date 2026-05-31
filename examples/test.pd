@@ -3,13 +3,7 @@
 // This is a single line comment
 
 /*
-    when every some one prints it prints out in int even if the sum has a double in it, i.e
-    
-    int sum = 10.2 + 2;
-    print (sum);
-
-    OUTPUT:
-    12
+    This is a multi line comment
 */
 
 int x = 10;
@@ -26,8 +20,9 @@ int mod = 10 % 7;
 
 int user_input = 0;
 string user_name;
-input ("User : ", user_input);
-input ("User Name :", user_name);
+
+string line = "____________________________";
+
 
 
 print (x);
@@ -41,8 +36,12 @@ print ("Minus : " subraction);
 print ("MOD : " mod);
 print (isgood);         // prints 1 as true and 0 and false
 
-print (user_input);
-print(user_name);
+input ("User age : ", user_input);
+input ("User Name :", user_name);
 
+print (line);
+print ("Age : " user_input);
+print("Name : "user_name);
+print (line);
 
 print("Hello,World!");

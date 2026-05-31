@@ -166,6 +166,8 @@ Token lexer::getnextToken(std::istream &file, int& line)
         }
         return {TOKENTYPE::STRING_LITERAL, str, line};
     }
+            default:
+                break;
     }
 
     // for the comments and divide
