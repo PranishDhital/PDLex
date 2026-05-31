@@ -1,5 +1,10 @@
 #include "lexer.h"
 
+#include <fstream>
+#include <cctype>
+#include <iostream>
+
+
 void lexer::print(const Token &tok)
 {
     switch (tok.type)
@@ -75,7 +80,7 @@ void lexer::print(const Token &tok)
     };
 }
 
-Token lexer::getnextToken(std::ifstream &file, int& line)
+Token lexer::getnextToken(std::istream &file, int& line)
 {
     char ch;
 
@@ -161,6 +166,8 @@ Token lexer::getnextToken(std::ifstream &file, int& line)
         }
         return {TOKENTYPE::STRING_LITERAL, str, line};
     }
+            default:
+                break;
     }
 
     // for the comments and divide
@@ -189,7 +196,7 @@ Token lexer::getnextToken(std::ifstream &file, int& line)
                 {
                     line++;
                 }
-                if (prev == '*' && ch == '/')
+                else if (prev == '*' && ch == '/')
                 {
                     break;
                 }

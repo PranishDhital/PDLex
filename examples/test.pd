@@ -7,7 +7,7 @@
 */
 
 int x = 10;
-int y = 20;
+int y = 200 ;
 double z = 40.2;
 string Name = "Pranish";
 string lastname = "Pookie";
@@ -18,10 +18,11 @@ int add = x + y  + 10.2;
 int subraction =  x - y;
 int mod = 10 % 7;
 
-// int user_input = 0;
-// int user_name = 0;
-// input (user_input);
-// input (user_name);
+int user_input = 0;
+string user_name;
+
+string line = "____________________________";
+
 
 
 print (x);
@@ -30,10 +31,17 @@ print (z);
 print (Name lastname);
 print ("hi," Name);
 print ("The sum is : " sum);
-print("The sum is : " add);
+print ("The sum is : " add);
 print ("Minus : " subraction);
 print ("MOD : " mod);
 print (isgood);         // prints 1 as true and 0 and false
 
+input ("User age : ", user_input);
+input ("User Name :", user_name);
+
+print (line);
+print ("Age : " user_input);
+print("Name : "user_name);
+print (line);
 
 print("Hello,World!");

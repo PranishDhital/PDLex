@@ -1,10 +1,9 @@
 #pragma once
 
-#include <iostream>
+
 #include <istream>
 #include <string>
-#include <fstream>
-#include <cctype>
+
 
 enum class TOKENTYPE
 {
@@ -46,8 +45,8 @@ struct Token
 class lexer
 {
 public:
-    Token getnextToken(std::ifstream &file, int& line);
-    void print(const Token &tok);
+    static Token getnextToken(std::istream &file, int& line) ;
+    static void print(const Token &tok);
 
 private:
 };
