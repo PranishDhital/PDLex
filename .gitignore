@@ -26,6 +26,7 @@ out/
 CMakeCache.txt
 CMakeLists.txt.user
 CMakeUserPresets.json
+CMakeSettings.json
 
 # Visual Studio
 *.sln.user
