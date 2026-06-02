@@ -37,9 +37,9 @@ enum class TOKENTYPE
 
 struct Token
 {
-    TOKENTYPE type;
-    std::string value;
-    int line;
+    TOKENTYPE type = TOKENTYPE::UNDEFINED;
+    std::string value = "";
+    int line = 1;
 };
 
 class lexer
@@ -50,3 +50,4 @@ public:
 
 private:
 };
+

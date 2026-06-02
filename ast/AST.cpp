@@ -1,5 +1,6 @@
 
 #include "AST.h"
+#include "../error/error.h"
 
 std::string AST::filename;
 
@@ -104,20 +105,15 @@ NODE AST::parseprint( const std::vector<Token>& tokens, int& i)
 	// skiping lparen
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
 	{
-		errors::syntaxError("Expected '('" , node.line, filename);
-		return node;
+		throw SyntaxError("Expected '('", node.line, filename);
 	}
-	else
-	{
-		i++;
-	}
+	i++;
 
 	while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RPAREN)
 	{
 		if (tokens[i].type == TOKENTYPE::END)
 		{
-			errors::syntaxError("Expected ')'" , tokens[i].line, filename);
-			return node;
+			throw SyntaxError("Expected ')'", tokens[i].line, filename);
 		}
 		else if (tokens[i].type == TOKENTYPE::NUMBER)
 		{
@@ -165,21 +161,15 @@ NODE AST::parseprint( const std::vector<Token>& tokens, int& i)
 
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RPAREN)
 	{
-		errors::syntaxError("Expected ')'", tokens[i].line, filename);
+		throw SyntaxError("Expected ')'", tokens[i].line, filename);
 	}
-	else
-	{
-		i++;
-	}
+	i++;
 
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
 	{
-		errors::syntaxError("Expected ';' at the end" , tokens[i].line, filename);
+		throw SyntaxError("Expected ';' at the end", tokens[i].line, filename);
 	}
-	else
-	{
-		i++;
-	}
+	i++;
 
 	return node;
 }
@@ -207,8 +197,7 @@ NODE AST::parseVar(const std::vector<Token>& tokens, int& i)
 
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::IDENT)
 	{
-		errors::syntaxError("Need to declare a variable", node.line, filename);
-		return node;
+		throw SyntaxError("Need to declare a variable", node.line, filename);
 	}
 	node.value = tokens[i].value;
 
@@ -230,8 +219,7 @@ NODE AST::parseVar(const std::vector<Token>& tokens, int& i)
 	// Expect semicolon
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI)
 	{
-		errors::syntaxError("Expected ';' at the end", tokens[i].line, filename);
-		return node;
+		throw SyntaxError("Expected ';' at the end", i < static_cast<int>(tokens.size()) ? tokens[i].line : node.line, filename);
 	}
 
 	i++; // skip ';'
@@ -309,12 +297,12 @@ NODE AST::parsePrimary(const std::vector<Token>& tokens, int& i)
 			}
 			else
 			{
-				errors::syntaxError("Expected ')' after input", node.line, filename);
+				throw SyntaxError("Expected ')' after input", node.line, filename);
 			}
 		}
 		else
 		{
-			errors::syntaxError("Expected '(' after 'input'", node.line, filename);
+			throw SyntaxError("Expected '(' after 'input'", node.line, filename);
 		}
 
 		// skip ';' if present
@@ -372,8 +360,7 @@ NODE AST::parseReassign(const std::vector<Token>& tokens, int& i)
 	// skip '='
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::EQUALSTO)
 	{
-		errors::syntaxError("Expected '=' after variable name", node.line, filename);
-		return node;
+		throw SyntaxError("Expected '=' after variable name", node.line, filename);
 	}
 	i++; // skip '='
 
@@ -383,9 +370,9 @@ NODE AST::parseReassign(const std::vector<Token>& tokens, int& i)
 	// expect a ';'
 	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
 	{
-		errors::syntaxError("Expected ';'", tokens[i].line, filename);
+		throw SyntaxError("Expected ';'", tokens[i].line, filename);
 	}
-	else
+	else if (i < static_cast<int>(tokens.size()))
 	{
 		i++; // skip ';'
 	}
@@ -404,8 +391,7 @@ NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
 
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
 	{
-		errors::syntaxError("Expected '(' after input", tokens[i].line, filename);
-		return node;
+		throw SyntaxError("Expected '(' after input", i < static_cast<int>(tokens.size()) ? tokens[i].line : node.line, filename);
 	}
 
 	i++; // skip '('
@@ -447,16 +433,14 @@ NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
 
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::RPAREN)
 	{
-		errors::syntaxError("Expected ')' after input", tokens[i].line, filename);
-		return node;
+		throw SyntaxError("Expected ')' after input", i < static_cast<int>(tokens.size()) ? tokens[i].line : node.line, filename);
 	}
 
 	i++; // skip ')'
 
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI)
 	{
-		errors::syntaxError("Expected ';' at the end", tokens[i].line, filename);
-		return node;
+		throw SyntaxError("Expected ';' at the end", i < static_cast<int>(tokens.size()) ? tokens[i].line : node.line, filename);
 	}
 
 	i++; // skip ';'

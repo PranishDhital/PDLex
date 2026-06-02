@@ -21,7 +21,7 @@ int mod = 10 % 7;
 int user_input = 0;
 string user_name;
 
-string line = "____________________________";
+string line = "____________________________"
 
 
 

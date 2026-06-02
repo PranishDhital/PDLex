@@ -22,10 +22,10 @@ enum class NODETYPE
 
 struct NODE
 {
-	NODETYPE nodetype;
-	std::string value;
+	NODETYPE nodetype = NODETYPE::NUMBER_LITERAL;
+	std::string value = "";
 	std::vector<NODE> child;
-	int line;
+	int line = 1;
 };
 
 class AST

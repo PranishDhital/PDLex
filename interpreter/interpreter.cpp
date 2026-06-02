@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include <stdexcept>
+#include "../error/error.h"
 
 using Value = std::variant<std::string, int, double, bool>;
 
@@ -130,11 +131,10 @@ Value interpreter::evaluateNode(const NODE &node)
         case NODETYPE::IDENT:
             if (!variables.contains(node.value))
             {
-                errors::runtimeError(
+                throw RuntimeError(
                     "undefined variable '" + node.value + "'",
                     node.line
                 );
-                return 0;
             }
             return variables[node.value];
 
@@ -328,8 +328,7 @@ void interpreter::interpret(const NODE &node)
                 }
                 else
                 {
-                    errors::runtimeError("cannot convert '" + input + "' to bool", node.line);
-                    return;
+                    throw RuntimeError("cannot convert '" + input + "' to bool", node.line);
                 }
             }
             else  // string
@@ -355,8 +354,7 @@ Value interpreter::evalexpr(const NODE &node)
         }
         catch (const std::exception &e)
         {
-            errors::runtimeError(std::string("numeric literal error: ") + e.what(), node.line);
-            return 0;
+            throw RuntimeError(std::string("numeric literal error: ") + e.what(), node.line);
         }
     }
 
@@ -368,8 +366,7 @@ Value interpreter::evalexpr(const NODE &node)
         }
         catch (const std::exception &e)
         {
-            errors::runtimeError(std::string("double literal error: ") + e.what(), node.line);
-            return 0.0;
+            throw RuntimeError(std::string("double literal error: ") + e.what(), node.line);
         }
     }
 
@@ -383,8 +380,7 @@ Value interpreter::evalexpr(const NODE &node)
     {
         if (!variables.contains(node.value))
         {
-            errors::runtimeError("undefined variable '" + node.value + "'", node.line);
-            return 0;
+            throw RuntimeError("undefined variable '" + node.value + "'", node.line);
         }
         return variables[node.value];
     }
