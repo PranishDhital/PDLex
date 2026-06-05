@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include "interpreter.h"
 #include "AST.h"
+#include "error/error.h"
 
 #include <iostream>
 #include <fstream>
@@ -103,7 +104,25 @@ int main(int argc, char **argv)
         tokens.push_back(tok);
     } while (tok.type != TOKENTYPE::END);
 
-    processTokens(tokens, ast, Interpert);
+    try
+    {
+        processTokens(tokens, ast, Interpert);
+    }
+    catch (const SyntaxError& e)
+    {
+        std::cerr << e.getFormattedMessage() << "\n";
+        return 1;
+    }
+    catch (const RuntimeError& e)
+    {
+        std::cerr << e.getFormattedMessage() << "\n";
+        return 1;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error: " << e.what() << "\n";
+        return 1;
+    }
 
     return 0;
 }
