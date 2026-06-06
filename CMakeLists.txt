@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ─────────────────────────────────────────────
-# Output directories (IMPORTANT for Visual Studio)
+# Output directories 
 # ─────────────────────────────────────────────
 
 # This is REQUIRED for multi-config generators (like Visual Studio)

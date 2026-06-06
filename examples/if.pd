@@ -1,0 +1,8 @@
+int a = 2;
+
+if (variable/condition == IDENT/RESULT/NUMBER)
+{
+	print ("67");
+}
+
+print (a);

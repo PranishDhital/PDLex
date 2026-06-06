@@ -1,35 +1,90 @@
 /*
-	This file only consist of checking whether the toy interperter can do some basic math
+	Comprehensive test file for precedence-based expression parser
+	Tests operator precedence: *, / % > + - > == !=
 */
 
+// Basic variable declarations
 int x = 10;
 int y = 10;
 int z = 7;
 
+// Test 1: Multiplication has higher precedence than addition
+// Expected: 3 + (2 * 5) = 13, not (3 + 2) * 5 = 25
+int result1 = 3 + 2 * 5;
+
+// Test 2: Multiple multiplications (left-to-right associativity)
+// Expected: (2 * 3) * 4 = 24
+int result2 = 2 * 3 * 4;
+
+// Test 3: Division and multiplication same precedence
+// Expected: (10 / 2) * 3 = 15, not 10 / (2 * 3) = 1
+int result3 = 10 / 2 * 3;
+
+// Test 4: Modulo operation
+// Expected: 10 % 3 = 1
+int result4 = 10 % 3;
+
+// Test 5: Addition and subtraction (same precedence, left-to-right)
+// Expected: (10 - 3) + 2 = 9, not 10 - (3 + 2) = 5
+int result5 = 10 - 3 + 2;
+
+// Test 6: Complex expression mixing +, -, *, /
+// Expected: 2 + 3 * 4 - 5 / 2 = 2 + 12 - 2 = 12
+int result6 = 2 + 3 * 4 - 5 / 2;
+
+// Test 7: Chained addition and subtraction
+// Expected: 1 + 2 * 3 + 4 = 1 + 6 + 4 = 11
+int result7 = 1 + 2 * 3 + 4;
+
+// Test 8: Division with truncation
+// Expected: 15 / 4 = 3
+int result8 = 15 / 4;
+
+// Test 9: Multiple factors
+// Expected: 2 * 3 * 4 / 2 = 12
+int result9 = 2 * 3 * 4 / 2;
+
+// Test 10: Subtraction with division
+// Expected: 10 - 8 / 2 = 10 - 4 = 6
+int result10 = 10 - 8 / 2;
+
+// Double precision tests
+double a = 1.1;
+double b = 1.1;
+double c = a + b;
+
+// Original tests
 int sum = x + y;
 int multi = x * y * z;
 int mod = x % z;
 int sub = x - z;
 int div = x / y;
 
+// Printing results
+print("------------------------Precedence-Based Expression Parser Tests----------------------------------");
 
-double a = 1.1;
-double b = 1.1;
-double c = a + b;
+print("Original Variable Tests:");
+print("X = " x);
+print("Y = " y);
+print("Z = " z);
+print("Sum of " x " and " y " = " sum);
+print("Multiplication of " x "," y " and " z " = " multi);
+print("Mod % of " x " and " z " = " mod);
+print("Subtraction of " x " and " z " = " sub);
+print("Division of " x " and " y " = " div);
+print("Double addition : " c);
 
+print("");
+print("Precedence Tests:");
+print("Test 1 - Multiplication precedence (3 + 2 * 5): " result1);
+print("Test 2 - Left associativity of * (2 * 3 * 4): " result2);
+print("Test 3 - Division then multiply (10 / 2 * 3): " result3);
+print("Test 4 - Modulo operation (10 % 3): " result4);
+print("Test 5 - Add/sub left assoc (10 - 3 + 2): " result5);
+print("Test 6 - Complex expr (2 + 3 * 4 - 5 / 2): " result6);
+print("Test 7 - Multiple ops (1 + 2 * 3 + 4): " result7);
+print("Test 8 - Integer division (15 / 4): " result8);
+print("Test 9 - Mixed mult/div (2 * 3 * 4 / 2): " result9);
+print("Test 10 - Sub with div (10 - 8 / 2): " result10);
 
-
-// printing 
-print ("------------------------B_Math Result----------------------------------");
-
-print ("X = " x);
-print ("Y = " y);
-print ("Z = " z);
-print ("Sum of " x " and " y " = " sum);
-print ("Multiplication of " x "," y " and " z " = " multi);
-print ("Mod % of " x " and " z " = " mod);
-print ("Subraction of " x " and " z " = " sub);
-print ("Division of " x " and " y " = " div);
-print ("Double addition : " c );
-
-print ("------------------------B_Math Finish----------------------------------");
+print("------------------------All Tests Completed----------------------------------");

@@ -73,6 +73,15 @@ void lexer::print(const Token &tok)
     case TOKENTYPE::PERCENTAGE:
         std::cout << "PERCENTAGE    : " << tok.value << "\n";
         break;
+    case TOKENTYPE::EQEQ:
+        std::cout << "EQEQ          : " << tok.value << "\n";
+        break;
+    case TOKENTYPE::LCURLEY:
+        std::cout << "LCURLEY       : " << tok.value << "\n";
+        break;
+    case TOKENTYPE::RCURLEY:
+        std::cout << "RCURLEY       : " << tok.value << "\n";
+        break;
 
     default:
         std::cout << "UNKNOWN       : " << tok.value << "\n";
@@ -113,7 +122,16 @@ Token lexer::getnextToken(std::istream &file, int& line)
         return {TOKENTYPE::RPAREN, ")", line};
     case ';':
         return {TOKENTYPE::SEMI, ";", line};
+    case '{':
+        return { TOKENTYPE::LCURLEY, "{",line };
+    case '}':
+        return { TOKENTYPE::RCURLEY, "}", line };
     case '=':
+        if (file.peek() == '=')
+        {
+            file.get(ch);
+            return { TOKENTYPE::EQEQ, "==", line };
+        }
         return {TOKENTYPE::EQUALSTO, "=",line};
 
     case '%':
@@ -251,6 +269,10 @@ Token lexer::getnextToken(std::istream &file, int& line)
         else if (ident == "input")
         {
             return { TOKENTYPE::INPUT, ident, line };
+        }
+        else if (ident == "if")
+        {
+            return { TOKENTYPE::IF, ident, line };
         }
 
         return {TOKENTYPE::IDENT, ident, line};

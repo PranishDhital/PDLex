@@ -313,32 +313,120 @@ NODE AST::parsePrimary(const std::vector<Token>& tokens, int& i)
 
 		return node;
 	}
-	return node;
+	throw SyntaxError("Unexpected token in primary expression", tokens[i].line, filename);
 }
 
 NODE AST::parseExpr(const std::vector<Token>& tokens, int& i)
 {
-	NODE left = parsePrimary(tokens, i); // the left side
+	return parseEquality(tokens, i);
+}
+
+NODE AST::parseEquality(const std::vector<Token>& tokens, int& i)
+{
+	NODE left = parseComparison(tokens, i);
 
 	while (i < static_cast<int>(tokens.size()) &&
-		(tokens[i].type == TOKENTYPE::PLUS || tokens[i].type == TOKENTYPE::MINUS || tokens[i].type == TOKENTYPE::MULTIPLY || tokens[i].type == TOKENTYPE::DIVIDE || tokens[i].type == TOKENTYPE::PERCENTAGE))
+		(tokens[i].type == TOKENTYPE::EQEQ || tokens[i].type == TOKENTYPE::NOTEQUAL))
 	{
 		const std::string op = tokens[i].value;
 		const int opLine = tokens[i].line;
 		i++;
 
-		NODE right = parsePrimary(tokens, i); // get the right side
+		NODE right = parseComparison(tokens, i);
 
 		NODE expr;
 		expr.nodetype = NODETYPE::BINARY_OP;
 		expr.value = op;
 		expr.line = opLine;
-		expr.child.push_back(left);  // the left side
-		expr.child.push_back(right); // the right side in the tree
+		expr.child.push_back(left);
+		expr.child.push_back(right);
 
-		// for the chain
 		left = expr;
 	}
+
+	return left;
+}
+
+NODE AST::parseComparison(const std::vector<Token>& tokens, int& i)
+{
+	NODE left = parseTerm(tokens, i);
+
+	// Note: Currently the lexer doesn't have token types for <, >, <=, >=
+	// This function is prepared for when those are added to the lexer
+	while (i < static_cast<int>(tokens.size()) &&
+		(tokens[i].type == TOKENTYPE::PLUS ||  // Placeholder until comparison tokens are added
+		 tokens[i].type == TOKENTYPE::MINUS))   // These will be replaced with actual comparison operators
+	{
+		// This condition will never be true in current implementation
+		// It's here as a placeholder for future comparison operator support
+		const std::string op = tokens[i].value;
+		const int opLine = tokens[i].line;
+		i++;
+
+		NODE right = parseTerm(tokens, i);
+
+		NODE expr;
+		expr.nodetype = NODETYPE::BINARY_OP;
+		expr.value = op;
+		expr.line = opLine;
+		expr.child.push_back(left);
+		expr.child.push_back(right);
+
+		left = expr;
+	}
+
+	return left;
+}
+
+NODE AST::parseTerm(const std::vector<Token>& tokens, int& i)
+{
+	NODE left = parseFactor(tokens, i);
+
+	while (i < static_cast<int>(tokens.size()) &&
+		(tokens[i].type == TOKENTYPE::PLUS || tokens[i].type == TOKENTYPE::MINUS))
+	{
+		const std::string op = tokens[i].value;
+		const int opLine = tokens[i].line;
+		i++;
+
+		NODE right = parseFactor(tokens, i);
+
+		NODE expr;
+		expr.nodetype = NODETYPE::BINARY_OP;
+		expr.value = op;
+		expr.line = opLine;
+		expr.child.push_back(left);
+		expr.child.push_back(right);
+
+		left = expr;
+	}
+
+	return left;
+}
+
+NODE AST::parseFactor(const std::vector<Token>& tokens, int& i)
+{
+	NODE left = parsePrimary(tokens, i);
+
+	while (i < static_cast<int>(tokens.size()) &&
+		(tokens[i].type == TOKENTYPE::MULTIPLY || tokens[i].type == TOKENTYPE::DIVIDE || tokens[i].type == TOKENTYPE::PERCENTAGE))
+	{
+		const std::string op = tokens[i].value;
+		const int opLine = tokens[i].line;
+		i++;
+
+		NODE right = parsePrimary(tokens, i);
+
+		NODE expr;
+		expr.nodetype = NODETYPE::BINARY_OP;
+		expr.value = op;
+		expr.line = opLine;
+		expr.child.push_back(left);
+		expr.child.push_back(right);
+
+		left = expr;
+	}
+
 	return left;
 }
 
@@ -447,3 +535,33 @@ NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
 
 	return node;
 }
+
+
+//NODE AST::parseIfStatement(const std::vector<Token>& tokens, int& i)
+//{
+//	NODE node;
+//	node.nodetype = NODETYPE::IF_STATEMENT;
+//	node.line = tokens[i].line;
+//
+//	i++; // skip 'if'
+//
+//
+//	if (i >= tokens.size() || tokens[i].type != TOKENTYPE::LPAREN)
+//		throw SyntaxError("Expected '(' after if", tokens[i].line, filename);
+//
+//	i++; 
+//
+//	
+//	NODE condition = parseExpr(tokens, i);
+//
+//	// expect ')'
+//	if (i >= tokens.size() || tokens[i].type != TOKENTYPE::RPAREN)
+//		throw SyntaxError("Expected ')' after if condition", tokens[i].line, filename);
+//
+//	i++; // skip ')'
+//
+//
+//	node.child.push_back(condition);
+//
+//	return node;
+//}

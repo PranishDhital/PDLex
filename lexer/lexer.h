@@ -21,6 +21,9 @@ enum class TOKENTYPE
     NOTEQUAL,
     EXCLAMATION,
     PERCENTAGE,
+    EQEQ,
+    RCURLEY,
+    LCURLEY,
 
     INT,
     DOUBLE,
@@ -30,6 +33,8 @@ enum class TOKENTYPE
     BOOLEAN,
     BOOL_LITERAL,
     INPUT,
+    IF,
+
 
     END,
     UNDEFINED
