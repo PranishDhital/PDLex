@@ -1,16 +1,163 @@
-int a = 2;
+// Test file for if, else if, else statements
 
-if (a == 4)
+print("------------------------If Statement Tests----------------------------------");
+
+// Test 1: Basic if - true condition
+int a = 5;
+if (a == 5)
 {
-	print ("if condition is true");
+    print("Test 1 PASSED - basic if true");
 }
-else if (a == 2)
+
+// Test 2: Basic if - false condition (should not print)
+if (a == 99)
 {
-	print ("else if condition");
+    print("Test 2 FAILED - should not print");
+}
+
+// Test 3: if else - true branch
+if (a == 5)
+{
+    print("Test 3 PASSED - if branch taken");
 }
 else
 {
-	print ("else block executed");
+    print("Test 3 FAILED - else should not run");
 }
 
-print (a);
+// Test 4: if else - false branch
+if (a == 99)
+{
+    print("Test 4 FAILED - if should not run");
+}
+else
+{
+    print("Test 4 PASSED - else branch taken");
+}
+
+// Test 5: else if - first branch true
+int b = 10;
+if (b == 10)
+{
+    print("Test 5 PASSED - first if branch taken");
+}
+else if (b == 20)
+{
+    print("Test 5 FAILED - else if should not run");
+}
+else
+{
+    print("Test 5 FAILED - else should not run");
+}
+
+// Test 6: else if - middle branch true
+int c = 20;
+if (c == 10)
+{
+    print("Test 6 FAILED - if should not run");
+}
+else if (c == 20)
+{
+    print("Test 6 PASSED - else if branch taken");
+}
+else
+{
+    print("Test 6 FAILED - else should not run");
+}
+
+// Test 7: else if - last branch (else) taken
+int d = 99;
+if (d == 10)
+{
+    print("Test 7 FAILED - if should not run");
+}
+else if (d == 20)
+{
+    print("Test 7 FAILED - else if should not run");
+}
+else
+{
+    print("Test 7 PASSED - else branch taken");
+}
+
+// Test 8: less than
+int e = 3;
+if (e < 5)
+{
+    print("Test 8 PASSED - less than works");
+}
+else
+{
+    print("Test 8 FAILED");
+}
+
+// Test 9: greater than
+if (e > 1)
+{
+    print("Test 9 PASSED - greater than works");
+}
+else
+{
+    print("Test 9 FAILED");
+}
+
+// Test 10: less than or equal
+if (e <= 3)
+{
+    print("Test 10 PASSED - less or equal works");
+}
+else
+{
+    print("Test 10 FAILED");
+}
+
+// Test 11: greater than or equal
+if (e >= 3)
+{
+    print("Test 11 PASSED - greater or equal works");
+}
+else
+{
+    print("Test 11 FAILED");
+}
+
+// Test 12: not equal
+if (e != 99)
+{
+    print("Test 12 PASSED - not equal works");
+}
+else
+{
+    print("Test 12 FAILED");
+}
+
+// Test 13: condition with arithmetic
+if (e + 2 == 5)
+{
+    print("Test 13 PASSED - arithmetic in condition works");
+}
+else
+{
+    print("Test 13 FAILED");
+}
+
+// Test 14: chained else if
+int grade = 75;
+if (grade >= 90)
+{
+    print("Test 14 - Grade: A");
+}
+else if (grade >= 80)
+{
+    print("Test 14 - Grade: B");
+}
+else if (grade >= 70)
+{
+    print("Test 14 PASSED - Grade: C");
+}
+else
+{
+    print("Test 14 FAILED - Grade: F");
+}
+
+print("------------------------All If Tests Completed----------------------------------");

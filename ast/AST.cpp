@@ -2,7 +2,7 @@
 #include "AST.h"
 #include "../error/error.h"
 
-NODE AST::parsecall(const std::vector<Token> &tokens, int &i)
+NODE AST::parsecall(const std::vector<Token>& tokens, int& i)
 {
 	NODE call;
 	call.nodetype = NODETYPE::CALL_EXPR;
@@ -80,7 +80,7 @@ NODE AST::parsecall(const std::vector<Token> &tokens, int &i)
 	return call;
 }
 
-NODE AST::parseprint(const std::vector<Token> &tokens, int &i)
+NODE AST::parseprint(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::PRINT_STATEMENT;
@@ -173,7 +173,7 @@ NODE AST::parseprint(const std::vector<Token> &tokens, int &i)
 }
 
 // parse variables
-NODE AST::parseVar(const std::vector<Token> &tokens, int &i)
+NODE AST::parseVar(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::VARIABLE_DECLARATION;
@@ -225,7 +225,7 @@ NODE AST::parseVar(const std::vector<Token> &tokens, int &i)
 	return node;
 }
 
-NODE AST::parsePrimary(const std::vector<Token> &tokens, int &i)
+NODE AST::parsePrimary(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 
@@ -315,17 +315,17 @@ NODE AST::parsePrimary(const std::vector<Token> &tokens, int &i)
 	throw SyntaxError("Unexpected token in primary expression", tokens[i].line, filename);
 }
 
-NODE AST::parseExpr(const std::vector<Token> &tokens, int &i)
+NODE AST::parseExpr(const std::vector<Token>& tokens, int& i)
 {
 	return parseEquality(tokens, i);
 }
 
-NODE AST::parseEquality(const std::vector<Token> &tokens, int &i)
+NODE AST::parseEquality(const std::vector<Token>& tokens, int& i)
 {
 	NODE left = parseComparison(tokens, i);
 
 	while (i < static_cast<int>(tokens.size()) &&
-		   (tokens[i].type == TOKENTYPE::EQEQ || tokens[i].type == TOKENTYPE::NOTEQUAL))
+		(tokens[i].type == TOKENTYPE::EQEQ || tokens[i].type == TOKENTYPE::NOTEQUAL))
 	{
 		const std::string op = tokens[i].value;
 		const int opLine = tokens[i].line;
@@ -346,13 +346,13 @@ NODE AST::parseEquality(const std::vector<Token> &tokens, int &i)
 	return left;
 }
 
-NODE AST::parseComparison(const std::vector<Token> &tokens, int &i)
+NODE AST::parseComparison(const std::vector<Token>& tokens, int& i)
 {
 	NODE left = parseTerm(tokens, i);
 
 	// Handle comparison operators: <, >, <=, >=
 	while (i < static_cast<int>(tokens.size()) &&
-		   (tokens[i].type == TOKENTYPE::SMALLER_THAN ||
+		(tokens[i].type == TOKENTYPE::SMALLER_THAN ||
 			tokens[i].type == TOKENTYPE::GREATER_THAN ||
 			tokens[i].type == TOKENTYPE::SMALLER_OR_EQ ||
 			tokens[i].type == TOKENTYPE::GREATER_OR_EQ))
@@ -376,12 +376,12 @@ NODE AST::parseComparison(const std::vector<Token> &tokens, int &i)
 	return left;
 }
 
-NODE AST::parseTerm(const std::vector<Token> &tokens, int &i)
+NODE AST::parseTerm(const std::vector<Token>& tokens, int& i)
 {
 	NODE left = parseFactor(tokens, i);
 
 	while (i < static_cast<int>(tokens.size()) &&
-		   (tokens[i].type == TOKENTYPE::PLUS || tokens[i].type == TOKENTYPE::MINUS))
+		(tokens[i].type == TOKENTYPE::PLUS || tokens[i].type == TOKENTYPE::MINUS))
 	{
 		const std::string op = tokens[i].value;
 		const int opLine = tokens[i].line;
@@ -402,12 +402,12 @@ NODE AST::parseTerm(const std::vector<Token> &tokens, int &i)
 	return left;
 }
 
-NODE AST::parseFactor(const std::vector<Token> &tokens, int &i)
+NODE AST::parseFactor(const std::vector<Token>& tokens, int& i)
 {
 	NODE left = parsePrimary(tokens, i);
 
 	while (i < static_cast<int>(tokens.size()) &&
-		   (tokens[i].type == TOKENTYPE::MULTIPLY || tokens[i].type == TOKENTYPE::DIVIDE || tokens[i].type == TOKENTYPE::PERCENTAGE))
+		(tokens[i].type == TOKENTYPE::MULTIPLY || tokens[i].type == TOKENTYPE::DIVIDE || tokens[i].type == TOKENTYPE::PERCENTAGE))
 	{
 		const std::string op = tokens[i].value;
 		const int opLine = tokens[i].line;
@@ -428,7 +428,7 @@ NODE AST::parseFactor(const std::vector<Token> &tokens, int &i)
 	return left;
 }
 
-NODE AST::parseReassign(const std::vector<Token> &tokens, int &i)
+NODE AST::parseReassign(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::VARIABLE_DECLARATION; // reuse the  same node type
@@ -467,7 +467,7 @@ NODE AST::parseReassign(const std::vector<Token> &tokens, int &i)
 	return node;
 }
 
-NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
+NODE AST::parseInput(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::INPUT_EXPRESSION;
@@ -535,7 +535,7 @@ NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
 	return node;
 }
 
-NODE AST::parseIfStatement(const std::vector<Token> &tokens, int &i)
+NODE AST::parseIfStatement(const std::vector<Token>& tokens, int& i)
 {
 	NODE node;
 	node.nodetype = NODETYPE::IF_STATEMENT;
@@ -586,32 +586,40 @@ NODE AST::parseIfStatement(const std::vector<Token> &tokens, int &i)
 	if (i < tokens.size() && tokens[i].type == TOKENTYPE::ElSE)
 	{
 		i++;
-		if (i >= tokens.size() || tokens[i].type != TOKENTYPE::LCURLEY)
+		if (i < tokens.size() && tokens[i].type == TOKENTYPE::IF)
 		{
-			throw SyntaxError("Expected '{' after the conditon", tokens[i].line, filename);
+			NODE elseif;
+			elseif = parseIfStatement(tokens, i);
+			node.child.push_back(elseif);
 		}
-		i++;
+		else {
+			if (i >= tokens.size() || tokens[i].type != TOKENTYPE::LCURLEY)
+			{
+				throw SyntaxError("Expected '{' after the conditon", tokens[i].line, filename);
+			}
+			i++;
 
-		NODE elseBlock;
-		elseBlock.nodetype = NODETYPE::BLOCK;
+			NODE elseBlock;
+			elseBlock.nodetype = NODETYPE::BLOCK;
 
-		while (i < tokens.size() && tokens[i].type != TOKENTYPE::RCURLEY)
-		{
-			elseBlock.child.push_back(parseStatement(tokens, i));
+			while (i < tokens.size() && tokens[i].type != TOKENTYPE::RCURLEY)
+			{
+				elseBlock.child.push_back(parseStatement(tokens, i));
+			}
+			if (i >= tokens.size() || tokens[i].type != TOKENTYPE::RCURLEY)
+			{
+				throw SyntaxError("Expected '}' to close else block", tokens[i].line, filename);
+			}
+			i++; // skip '}'
+
+			node.child.push_back(elseBlock); // child[2] is the else block
 		}
-		if (i >= tokens.size() || tokens[i].type != TOKENTYPE::RCURLEY)
-		{
-			throw SyntaxError("Expected '}' to close else block", tokens[i].line, filename);
-		}
-		i++; // skip '}'
-
-		node.child.push_back(elseBlock); // child[2] is the else block
 	}
 
 	return node;
 }
 
-NODE AST::parseStatement(const std::vector<Token> &tokens, int &i)
+NODE AST::parseStatement(const std::vector<Token>& tokens, int& i)
 {
 	if (tokens[i].type == TOKENTYPE::IF)
 	{

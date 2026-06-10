@@ -277,13 +277,20 @@ void interpreter::interpret(const NODE& node)
 			{
 				interpret(statement);
 			}
-		}
+		}	/// this i s just the if condition
 		else if (node.child.size() > 2)
-		{
-			for (auto& statement : node.child[2].child)
+		{ 
+			if (node.child[2].nodetype == NODETYPE::IF_STATEMENT)
 			{
-				interpret(statement);
-			}
+				interpret(node.child[2]);		
+			}					/// the else if block 
+			else
+			{
+				for (auto& statement : node.child[2].child)
+				{
+					interpret(statement);
+				}
+			} /// the else block 
 		}
 		return;
 	}
