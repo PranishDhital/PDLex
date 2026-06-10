@@ -581,6 +581,33 @@ NODE AST::parseIfStatement(const std::vector<Token> &tokens, int &i)
 		throw SyntaxError("Expected '}' at end of the block", i < static_cast<int>(tokens.size()) ? tokens[i].line : node.line, filename);
 	}
 	i++;
+
+	// for else {}
+	if (i < tokens.size() && tokens[i].type == TOKENTYPE::ElSE)
+	{
+		i++;
+		if (i >= tokens.size() || tokens[i].type != TOKENTYPE::LCURLEY)
+		{
+			throw SyntaxError("Expected '{' after the conditon", tokens[i].line, filename);
+		}
+		i++;
+
+		NODE elseBlock;
+		elseBlock.nodetype = NODETYPE::BLOCK;
+
+		while (i < tokens.size() && tokens[i].type != TOKENTYPE::RCURLEY)
+		{
+			elseBlock.child.push_back(parseStatement(tokens, i));
+		}
+		if (i >= tokens.size() || tokens[i].type != TOKENTYPE::RCURLEY)
+		{
+			throw SyntaxError("Expected '}' to close else block", tokens[i].line, filename);
+		}
+		i++; // skip '}'
+
+		node.child.push_back(elseBlock); // child[2] is the else block
+	}
+
 	return node;
 }
 
@@ -590,13 +617,11 @@ NODE AST::parseStatement(const std::vector<Token> &tokens, int &i)
 	{
 		return parseIfStatement(tokens, i);
 	}
-
-	if (tokens[i].type == TOKENTYPE::PRINT)
+	else if (tokens[i].type == TOKENTYPE::PRINT)
 	{
 		return parseprint(tokens, i);
 	}
-
-	if (tokens[i].type == TOKENTYPE::IDENT)
+	else if (tokens[i].type == TOKENTYPE::IDENT)
 	{
 		if (tokens[i + 1].type == TOKENTYPE::EQUALSTO)
 		{

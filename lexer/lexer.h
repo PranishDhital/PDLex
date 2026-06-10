@@ -38,6 +38,7 @@ enum class TOKENTYPE
     BOOL_LITERAL,
     INPUT,
     IF,
+    ElSE,
 
 
     END,

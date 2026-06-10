@@ -1,8 +1,16 @@
 int a = 2;
 
-if (a<13)
+if (a == 4)
 {
-	print ("67");
+	print ("if condition is true");
+}
+else if (a == 2)
+{
+	print ("else if condition");
+}
+else
+{
+	print ("else block executed");
 }
 
 print (a);

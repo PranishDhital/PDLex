@@ -82,6 +82,13 @@ void lexer::print(const Token &tok)
     case TOKENTYPE::RCURLEY:
         std::cout << "RCURLEY       : " << tok.value << "\n";
         break;
+    case TOKENTYPE::ElSE:
+        std::cout << "ElSE          : " << tok.value << "\n";
+        break;
+
+    case TOKENTYPE::IF:
+        std::cout << "IF            : " << tok.value << "\n";
+        break;
 
     default:
         std::cout << "UNKNOWN       : " << tok.value << "\n";
@@ -287,6 +294,10 @@ Token lexer::getnextToken(std::istream &file, int& line)
         else if (ident == "if")
         {
             return { TOKENTYPE::IF, ident, line };
+        }
+        else if (ident == "else")
+        {
+            return { TOKENTYPE::ElSE, ident, line };
         }
 
         return {TOKENTYPE::IDENT, ident, line};
