@@ -10,8 +10,10 @@ This repository is licensed under the Apache License 2.0. See [`LICENSE`](LICENS
 - Ignore `//` single-line comments and `/* ... */` block comments
 - Parse variable declarations and reassignments
 - Parse `print(...)` statements with multiple arguments
-- Parse `input (...)` statements.
+- Parse `input(...)` statements
 - Evaluate basic arithmetic expressions with `+`, `-`, `*`, `/`, and `%`
+- Evaluate comparison operators `==`, `!=`, `<`, `>`, `<=`, `>=`
+- Parse and execute `if`, `else if`, and `else` statements
 
 ## Language Snapshot
 
@@ -20,7 +22,8 @@ The current language supports a small subset of statements:
 - `int`, `double`, `string`, and `bool` variable declarations
 - Reassignment with `name = expression;`
 - `print(...)` for values and variables
-- `input(...)` to accept user input for values.
+- `input(...)` to accept user input
+- `if`, `else if`, `else` control flow
 - String literals with escape support for `\n`, `\t`, `\"`, and `\\`
 
 Example:
@@ -34,10 +37,23 @@ bool ok = true;
 
 int sum = x + 10;
 
-input ("Lastname : " , last_name);
+input("Lastname: " , last_name);
 print("Hello," first_name);
 print("Sum:" sum);
 print(ok);
+
+if (sum > 15)
+{
+    print("sum is greater than 15");
+}
+else if (sum == 20)
+{
+    print("sum is exactly 20");
+}
+else
+{
+    print("sum is 15 or less");
+}
 ```
 
 ## Build
@@ -48,49 +64,55 @@ Use any C++17-compatible compiler. With `cmake`, build it like this:
 cmake --build .
 ```
 
-If you prefer a different output name, change `-o ppi` to whatever you want in the CmakeLists.txt.
+If you prefer a different output name, change `-o ppi` to whatever you want in the `CMakeLists.txt`.
 
 ## Run
 
-Pass a `.pd` file to the executable (if compiled in release):
+Pass a `.pd` file to the executable (if compiled in Release):
 
 ```bash
 ./build/Release/ppi examples/test.pd
 ```
 
-On Windows, the command will look more like (Release):
+On Windows (Release):
 
 ```powershell
 build\Release\ppi.exe examples\test.pd
 ```
 
-If compiled in Debug : 
+On Linux/Mac (Debug):
 
 ```bash
 ./build/Debug/ppi examples/test.pd
 ```
 
-On Windows, the command will look like:
+On Windows (Debug):
+
 ```powershell
- build\Debug\ppi.exe examples\test.pd
+build\Debug\ppi.exe examples\test.pd
 ```
 
-## Example File
+## Example Files
 
-`test.pd` contains a sample program that exercises declarations, arithmetic, comments, printing and input. It is a good starting point if you want to see the current syntax in action.
+- `test.pd` — exercises declarations, arithmetic, comments, printing, and input
+- `if.pd` — exercises if, else if, and else control flow with various conditions
+
+These are good starting points if you want to see the current syntax in action.
 
 ## Notes
 
 - The interpreter is intentionally simple and only covers a subset of expressions and statements.
-- `print(...)` currently outputs arguments separated by spaces.
+- `print(...)` outputs arguments separated by spaces.
+- Comparison operators return `1` for true and `0` for false when assigned to a variable.
 
 ## Project Files
 
-- `main.cpp` - program entry point and statement dispatch
-- `lexer.cpp` / `lexer.h` - tokenization
-- `AST.cpp` / `AST.h` - parsing into AST nodes
-- `interpreter.cpp` / `interpreter.h` - execution of parsed nodes
-- `test.pd` - sample input file
+- `main.cpp` — program entry point and statement dispatch
+- `lexer.cpp` / `lexer.h` — tokenization
+- `AST.cpp` / `AST.h` — parsing into AST nodes
+- `interpreter.cpp` / `interpreter.h` — execution of parsed nodes
+- `examples/test.pd` — sample input file
+- `examples/if.pd` — if statement test file
 
 ## Status
 
