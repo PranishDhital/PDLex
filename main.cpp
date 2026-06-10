@@ -15,7 +15,7 @@ bool pdExtension(const std::string &filename)
     return filename.substr(filename.size() - 3) == ".pd";
 }
 
-void processTokens(const std::vector<Token>& tokens, AST& ast, interpreter& interp)
+void processTokens(const std::vector<Token> &tokens, AST &ast, interpreter &interp)
 {
     int i = 0;
     while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::END)
@@ -57,6 +57,11 @@ void processTokens(const std::vector<Token>& tokens, AST& ast, interpreter& inte
                 std::cerr << "Warning: unexpected token '" << tokens[i].value << "' at line " << tokens[i].line << "\n";
                 i++;
             }
+        }
+        else if (tokens[i].type == TOKENTYPE::IF)
+        {
+            NODE tree = ast.parseIfStatement(tokens, i);
+            interp.interpret(tree);
         }
         else
         {
@@ -108,17 +113,17 @@ int main(int argc, char **argv)
     {
         processTokens(tokens, ast, Interpert);
     }
-    catch (const SyntaxError& e)
+    catch (const SyntaxError &e)
     {
         std::cerr << e.getFormattedMessage() << "\n";
         return 1;
     }
-    catch (const RuntimeError& e)
+    catch (const RuntimeError &e)
     {
         std::cerr << e.getFormattedMessage() << "\n";
         return 1;
     }
-    catch (const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;

@@ -14,7 +14,7 @@ string lastname = "Pookie";
 bool isgood = true;
 
 int sum = 10 + 10;
-int add = x + y  + 10.2;
+double add = x + y  + 10.2;
 int subraction =  x - y;
 int mod = 10 % 7;
 
@@ -27,20 +27,20 @@ string line = "____________________________";
 print (x);
 print (y);
 print (z);
-print (Name lastname);
-print ("hi," Name);
-print ("The sum is : " sum);
-print ("The sum is : " add);
-print ("Minus : " subraction);
-print ("MOD : " mod);
+print (Name + lastname);       // even without the '+' it will concatenate but use '+'  
+print ("hi," + Name);
+print ("The sum is : " + sum);
+print ("The sum is : " + add);
+print ("Minus : " + subraction);
+print ("MOD : " + mod);
 print (isgood);         // prints 1 as true and 0 and false
 
 input ("User age : ", user_input);
 input ("User Name :", user_name);
 
 print (line);
-print ("Age : " user_input);
-print("Name : "user_name);
+print ("Age : " + user_input);
+print("Name : " + user_name);
 print (line);
 
 print("Hello,World!");

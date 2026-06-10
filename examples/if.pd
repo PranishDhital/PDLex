@@ -1,16 +1,8 @@
 int a = 2;
 
-if (condition)
+if (a<13)
 {
 	print ("67");
-}
-else if (condition)
-{
-	// code 
-}
-else 
-{
-	// code
 }
 
 print (a);
