@@ -1,8 +1,16 @@
 int a = 2;
 
-if (variable/condition == IDENT/RESULT/NUMBER)
+if (condition)
 {
 	print ("67");
+}
+else if (condition)
+{
+	// code 
+}
+else 
+{
+	// code
 }
 
 print (a);

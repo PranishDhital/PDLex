@@ -24,6 +24,10 @@ enum class TOKENTYPE
     EQEQ,
     RCURLEY,
     LCURLEY,
+    GREATER_THAN,
+    GREATER_OR_EQ,
+    SMALLER_THAN,
+    SMALLER_OR_EQ,
 
     INT,
     DOUBLE,
@@ -50,8 +54,8 @@ struct Token
 class lexer
 {
 public:
-    static Token getnextToken(std::istream &file, int& line) ;
-    static void print(const Token &tok);
+    Token getnextToken(std::istream &file, int& line);
+    void print(const Token &tok);
 
 private:
 };

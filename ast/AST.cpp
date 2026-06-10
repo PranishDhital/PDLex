@@ -2,8 +2,6 @@
 #include "AST.h"
 #include "../error/error.h"
 
-std::string AST::filename;
-
 NODE AST::parsecall(const std::vector<Token>& tokens, int& i)
 {
 	NODE call;
@@ -351,14 +349,13 @@ NODE AST::parseComparison(const std::vector<Token>& tokens, int& i)
 {
 	NODE left = parseTerm(tokens, i);
 
-	// Note: Currently the lexer doesn't have token types for <, >, <=, >=
-	// This function is prepared for when those are added to the lexer
+	// Handle comparison operators: <, >, <=, >=
 	while (i < static_cast<int>(tokens.size()) &&
-		(tokens[i].type == TOKENTYPE::PLUS ||  // Placeholder until comparison tokens are added
-		 tokens[i].type == TOKENTYPE::MINUS))   // These will be replaced with actual comparison operators
+		(tokens[i].type == TOKENTYPE::SMALLER_THAN ||
+		 tokens[i].type == TOKENTYPE::GREATER_THAN ||
+		 tokens[i].type == TOKENTYPE::SMALLER_OR_EQ ||
+		 tokens[i].type == TOKENTYPE::GREATER_OR_EQ))
 	{
-		// This condition will never be true in current implementation
-		// It's here as a placeholder for future comparison operator support
 		const std::string op = tokens[i].value;
 		const int opLine = tokens[i].line;
 		i++;
@@ -536,7 +533,7 @@ NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
 	return node;
 }
 
-
+//
 //NODE AST::parseIfStatement(const std::vector<Token>& tokens, int& i)
 //{
 //	NODE node;
@@ -547,21 +544,53 @@ NODE AST::parseInput(const std::vector<Token> &tokens, int &i)
 //
 //
 //	if (i >= tokens.size() || tokens[i].type != TOKENTYPE::LPAREN)
+//	{
 //		throw SyntaxError("Expected '(' after if", tokens[i].line, filename);
+//	}
 //
-//	i++; 
+//	i++; // skip '('
 //
 //	
 //	NODE condition = parseExpr(tokens, i);
 //
 //	// expect ')'
 //	if (i >= tokens.size() || tokens[i].type != TOKENTYPE::RPAREN)
-//		throw SyntaxError("Expected ')' after if condition", tokens[i].line, filename);
+//	{
+//		throw SyntaxError("Expected ')' to close the condition", tokens[i].line, filename);
+//	}
 //
 //	i++; // skip ')'
 //
+//	if (i >= tokens.size() || tokens[i].type != TOKENTYPE::LCURLEY)
+//	{
+//		throw SyntaxError("Expected '{' after the conditon", tokens[i].line, filename);
+//	}
+//	NODE Block;
+//	Block.nodetype = NODETYPE::BLOCK;
+//
+//	while (i < tokens.size() && tokens[i].type != TOKENTYPE::RCURLEY)
+//	{
+//		Block.child.push_back(parseStatement(tokens, i));
+//	}
 //
 //	node.child.push_back(condition);
 //
 //	return node;
 //}
+
+NODE AST::parseStatement(const std::vector<Token>& tokens, int& i)
+{
+	if (tokens[i].type == TOKENTYPE::IF)
+		return parseIfStatement(tokens, i);
+
+	if (tokens[i].type == TOKENTYPE::PRINT)
+		return parseprint(tokens, i);
+
+	if (tokens[i].type == TOKENTYPE::IDENT)
+	{
+		if (tokens[i + 1].type == TOKENTYPE::EQUALSTO)
+			return parseReassign(tokens, i);
+	}
+
+	throw SyntaxError("Unknown statement", tokens[i].line, filename);
+}

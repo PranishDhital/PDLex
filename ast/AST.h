@@ -18,7 +18,8 @@ enum class NODETYPE
 	PRINT_STATEMENT,
 	VARIABLE_DECLARATION,
 	INPUT_EXPRESSION,
-	IF_STATEMENT
+	IF_STATEMENT,
+	BLOCK
 };
 
 struct NODE
@@ -32,21 +33,22 @@ struct NODE
 class AST
 {
 public:
-	static NODE parsecall(const std::vector<Token>& tokens, int& i);
-	static NODE parseExpr(const std::vector<Token>& tokens, int& i);
-	static NODE parseEquality(const std::vector<Token>& tokens, int& i);
-	static NODE parseComparison(const std::vector<Token>& tokens, int& i);
-	static NODE parseTerm(const std::vector<Token>& tokens, int& i);
-	static NODE parseFactor(const std::vector<Token>& tokens, int& i);
-	static NODE parsePrimary(const std::vector<Token>& tokens, int& i);
-	static NODE parseprint(const std::vector<Token>& tokens, int& i);
-	static NODE parseVar(const std::vector<Token>& tokens, int& i);
-	static NODE parseReassign(const std::vector<Token>& tokens, int& i);
-	static NODE parseInput(const std::vector<Token>& tokens, int& i);
-	static NODE parseIfStatement(const std::vector<Token>& tokens, int& i);
-	static void setFilename(const std::string& fname) { filename = fname; }
+	NODE parsecall(const std::vector<Token>& tokens, int& i);
+	NODE parseExpr(const std::vector<Token>& tokens, int& i);
+	NODE parseEquality(const std::vector<Token>& tokens, int& i);
+	NODE parseComparison(const std::vector<Token>& tokens, int& i);
+	NODE parseTerm(const std::vector<Token>& tokens, int& i);
+	NODE parseFactor(const std::vector<Token>& tokens, int& i);
+	NODE parsePrimary(const std::vector<Token>& tokens, int& i);
+	NODE parseprint(const std::vector<Token>& tokens, int& i);
+	NODE parseVar(const std::vector<Token>& tokens, int& i);
+	NODE parseReassign(const std::vector<Token>& tokens, int& i);
+	NODE parseInput(const std::vector<Token>& tokens, int& i);
+	NODE parseIfStatement(const std::vector<Token>& tokens, int& i);
+	NODE parseStatement(const std::vector<Token>& tokens, int& i);
+	void setFilename(const std::string& fname) { filename = fname; }
 
 private:
 	errors errorHandler;
-	static std::string filename;
+	std::string filename;
 };

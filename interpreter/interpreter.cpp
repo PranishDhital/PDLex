@@ -118,6 +118,11 @@ static bool is_double(const Value &v)
     return std::holds_alternative<double>(v);
 }
 
+static bool is_int(const Value &v)
+{
+    return std::holds_alternative<int>(v);
+}
+
 static bool is_string(const Value &v)
 {
     return std::holds_alternative<std::string>(v);
@@ -275,10 +280,9 @@ void interpreter::interpret(const NODE &node)
                        prompt);
         }
 
-        // This is IMPORTANT: Flush output so prompt appears before waiting for input
         std::cout.flush();
 
-        // Read input from stdin
+        // Read input from stdcin
         std::string input;
         std::getline(std::cin, input);
 
@@ -394,6 +398,39 @@ Value interpreter::evalexpr(const NODE &node)
         if (node.value == "+" && (is_string(left) || is_string(right)))
         {
             return to_string(left) + to_string(right);
+        }
+
+        // Comparison operators return int (0 for false, 1 for true)
+        // gonna wite the if conditons in the same line cause it better to look at
+        if (node.value == "==" || node.value == "!=" || node.value == "<" || 
+            node.value == ">" || node.value == "<=" || node.value == ">=")
+        {
+            // For comparisons, try to compare as numbers first if both are numeric types
+            if ((is_int(left) || is_double(left)) && (is_int(right) || is_double(right)))
+            {
+                const double l = to_double(left);
+                const double r = to_double(right);
+
+                if (node.value == "==") return (l == r) ? 1 : 0;
+                if (node.value == "!=") return (l != r) ? 1 : 0;
+                if (node.value == "<")  return (l < r) ? 1 : 0;
+                if (node.value == ">")  return (l > r) ? 1 : 0;
+                if (node.value == "<=") return (l <= r) ? 1 : 0;
+                if (node.value == ">=") return (l >= r) ? 1 : 0;
+            }
+            else
+            {
+                // For string comparisons
+                const std::string l = to_string(left);
+                const std::string r = to_string(right);
+
+                if (node.value == "==") return (l == r) ? 1 : 0;
+                if (node.value == "!=") return (l != r) ? 1 : 0;
+                if (node.value == "<")  return (l < r) ? 1 : 0;
+                if (node.value == ">")  return (l > r) ? 1 : 0;
+                if (node.value == "<=") return (l <= r) ? 1 : 0;
+                if (node.value == ">=") return (l >= r) ? 1 : 0;
+            }
         }
 
         // FIX: if either operand is a double, promote to double arithmetic

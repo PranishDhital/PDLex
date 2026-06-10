@@ -1,0 +1,98 @@
+// Test file for comparison operators and things
+// Testing  <, >, <=, >= with proper operator precedence or whatever
+
+print("------------------------Comparison Operator Tests----------------------------------");
+
+// Test 1: Less than
+int val1 = 5 < 10;
+print("Test 1 - Less than (5 < 10): " val1);
+
+// Test 2: Greater than
+int val2 = 10 > 5;
+print("Test 2 - Greater than (10 > 5): " val2);
+
+// Test 3: Less than or equal - true case
+int val3 = 5 <= 5;
+print("Test 3 - Less or equal, true (5 <= 5): " val3);
+
+// Test 4: Greater than or equal - true case
+int val4 = 10 >= 10;
+print("Test 4 - Greater or equal, true (10 >= 10): " val4);
+
+// Test 5: Less than - false case
+int val5 = 10 < 5;
+print("Test 5 - Less than, false (10 < 5): " val5);
+
+// Test 6: Greater than - false case
+int val6 = 5 > 10;
+print("Test 6 - Greater than, false (5 > 10): " val6);
+
+// Test 7: Less than or equal - false case
+int val7 = 10 <= 5;
+print("Test 7 - Less or equal, false (10 <= 5): " val7);
+
+// Test 8: Greater than or equal - false case
+int val8 = 5 >= 10;
+print("Test 8 - Greater or equal, false (5 >= 10): " val8);
+
+// Test 9: Comparison with arithmetic - less than
+// 3 + 2 = 5, so 5 < 10 = true
+int val9 = 3 + 2 < 10;
+print("Test 9 - Arithmetic with less (3 + 2 < 10): " val9);
+
+// Test 10: Comparison with arithmetic - greater than
+// 2 * 5 = 10, so 10 > 8 = true
+int val10 = 2 * 5 > 8;
+print("Test 10 - Arithmetic with greater (2 * 5 > 8): " val10);
+
+// Test 11: Comparison with arithmetic - less or equal
+// 10 / 2 = 5, so 5 <= 5 = true
+int val11 = 10 / 2 <= 5;
+print("Test 11 - Arithmetic with less or equal (10 / 2 <= 5): " val11);
+
+// Test 12: Comparison with arithmetic - greater or equal
+// 3 * 3 = 9, so 9 >= 8 = true
+int val12 = 3 * 3 >= 8;
+print("Test 12 - Arithmetic with greater or equal (3 * 3 >= 8): " val12);
+
+// Test 13: Comparison with multiple arithmetic operations
+// 2 + 3 * 2 = 2 + 6 = 8, so 8 < 10 = true
+int val13 = 2 + 3 * 2 < 10;
+print("Test 13 - Complex arithmetic (2 + 3 * 2 < 10): " val13);
+
+// Test 14: Multiple comparisons with equality
+// First: 5 == 5 = 1 (true), then 1 > 0 = true
+int val14 = 5 == 5;
+print("Test 14 - Equality (5 == 5): " val14);
+
+// Test 15: Chained comparisons - left to right evaluation
+// (10 > 5) = 1 (true), then 1 > 0 = true
+int val15 = 10 > 5 > 0;
+print("Test 15 - Chained comparisons (10 > 5 > 0): " val15);
+
+// Test 16: Comparison with variables
+int x = 7;
+int y = 15;
+int val16 = x < y;
+print("Test 16 - Variable comparison (x=7 < y=15): " val16);
+
+// Test 17: Comparison with variables - false
+int val17 = x > y;
+print("Test 17 - Variable comparison, false (x=7 > y=15): " val17);
+
+// Test 18: Complex expression with all operators
+// 2 + 3 * 4 = 14, 14 <= 15 = true
+int val18 = 2 + 3 * 4 <= 15;
+print("Test 18 - Complex (2 + 3 * 4 <= 15): " val18);
+
+// Test 19: Subtraction with comparison
+// 20 - 5 = 15, 15 >= 10 = true
+int val19 = 20 - 5 >= 10;
+print("Test 19 - Subtraction with compare (20 - 5 >= 10): " val19);
+
+// Test 20: Division with comparison
+// 100 / 10 = 10, 10 == 10 = true
+int val20 = 100 / 10 == 10;
+print("Test 20 - Division with equality (100 / 10 == 10): " val20);
+
+print("------------------------All Comparison Tests Completed----------------------------------");

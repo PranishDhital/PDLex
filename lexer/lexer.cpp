@@ -126,6 +126,20 @@ Token lexer::getnextToken(std::istream &file, int& line)
         return { TOKENTYPE::LCURLEY, "{",line };
     case '}':
         return { TOKENTYPE::RCURLEY, "}", line };
+    case '<':
+        if (file.peek() == '=')
+        {
+            file.get(ch);
+            return { TOKENTYPE::SMALLER_OR_EQ, "<=", line };
+        }
+        return { TOKENTYPE::SMALLER_THAN, "<", line };
+    case '>':
+        if (file.peek() == '=')
+        {
+            file.get(ch);
+            return { TOKENTYPE::GREATER_OR_EQ, ">=", line };
+        }
+        return { TOKENTYPE::GREATER_THAN, ">", line };
     case '=':
         if (file.peek() == '=')
         {
