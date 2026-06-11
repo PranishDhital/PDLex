@@ -639,3 +639,64 @@ NODE AST::parseStatement(const std::vector<Token>& tokens, int& i)
 
 	throw SyntaxError("Unknown statement", tokens[i].line, filename);
 }
+
+
+//NODE AST::parseForLoop(const std::vector<Token>& tokens, int& i)
+//{
+//	NODE node;
+//	node.nodetype = NODETYPE::FOR_LOOP;
+//	node.line = tokens[i].line;
+//
+//	i++; // skip for 
+//	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
+//	{
+//		throw SyntaxError("Expected '(' after 'for'", tokens[i].line, filename);
+//	}
+//	i++;
+//
+//	node.child.push_back(parseVar(tokens, i));
+//
+//	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA)
+//	{
+//		throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
+//	}
+//	i++;
+//
+//	node.child.push_back(parseComparison(tokens, i));
+//	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA)
+//	{
+//		throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
+//	}
+//	i++;
+//
+//	node.child.push_back(parseExpr(tokens, i));
+//	i++;
+//
+//
+//	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RPAREN)
+//	{
+//		throw SyntaxError("Expected ')' to close the loop condition", tokens[i].line, filename);
+//	}
+//	i++;
+//	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::LCURLEY)
+//	{
+//		throw SyntaxError("Waring : Expected '{' after ')'", tokens[i].line, filename);
+//	}
+//
+//	i++;
+//	// The for loop code execution
+//	NODE forblock;
+//	forblock.nodetype = NODETYPE::BLOCK;
+//
+//	while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RCURLEY)
+//	{
+//		forblock.child.push_back(parseStatement(tokens, i));
+//	}
+//
+//	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RCURLEY)
+//	{
+//		throw SyntaxError("Warning : Expected '}' to close the loop", tokens[i].line, filename);
+//	}
+//
+//	return node;
+//}

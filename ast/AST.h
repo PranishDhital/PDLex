@@ -19,7 +19,8 @@ enum class NODETYPE
 	VARIABLE_DECLARATION,
 	INPUT_EXPRESSION,
 	IF_STATEMENT,
-	BLOCK
+	BLOCK,
+	FOR_LOOP
 };
 
 struct NODE
@@ -45,6 +46,7 @@ public:
 	NODE parseReassign(const std::vector<Token>& tokens, int& i);
 	NODE parseInput(const std::vector<Token>& tokens, int& i);
 	NODE parseIfStatement(const std::vector<Token>& tokens, int& i);
+	NODE parseForLoop(const std::vector<Token>& tokens, int& i);
 	NODE parseStatement(const std::vector<Token>& tokens, int& i);
 	void setFilename(const std::string& fname) { filename = fname; }
 

@@ -44,3 +44,15 @@ print("Name : " + user_name);
 print (line);
 
 print("Hello,World!");
+
+int num = 0 ;
+intput ("Enter an number thats not 0 or -ve : ", num )
+
+if (num%2 == 0)
+{
+    print ("its even");
+}
+else 
+{
+    print ("its odd");
+}

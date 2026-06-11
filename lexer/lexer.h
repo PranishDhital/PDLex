@@ -39,7 +39,7 @@ enum class TOKENTYPE
     INPUT,
     IF,
     ElSE,
-
+    FOR,
 
     END,
     UNDEFINED

@@ -6,6 +6,12 @@
 class SyntaxError : public std::runtime_error
 {
 public:
+	/// <summary>
+	/// prints syntax error message
+	/// </summary>
+	/// <param name="msg"></param>
+	/// <param name="line"></param>
+	/// <param name="filename"></param>
 	SyntaxError(const std::string& msg, int line, const std::string& filename = "");
 	int getLine() const { return m_line; }
 	const std::string& getFilename() const { return m_filename; }
@@ -21,6 +27,12 @@ private:
 class RuntimeError : public std::runtime_error
 {
 public:
+	/// <summary>
+	/// Prints Runtime error message
+	/// </summary>
+	/// <param name="msg"></param>
+	/// <param name="line"></param>
+	/// <param name="filename"></param>
 	RuntimeError(const std::string& msg, int line, const std::string& filename = "");
 	int getLine() const { return m_line; }
 	const std::string& getFilename() const { return m_filename; }
