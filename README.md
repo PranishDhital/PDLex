@@ -38,8 +38,8 @@ bool ok = true;
 int sum = x + 10;
 
 input("Lastname: " , last_name);
-print("Hello," first_name);
-print("Sum:" sum);
+print("Hello," + first_name + last_name);
+print("Sum:" + sum);
 print(ok);
 
 if (sum > 15)
