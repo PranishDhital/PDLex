@@ -24,6 +24,9 @@ void lexer::print(const Token &tok)
     case TOKENTYPE::INCREMENT:
         std::cout << "INCREMENT     : " << tok.value << "\n";
         break;
+    case TOKENTYPE::DECREMENT:
+        std::cout << "DECREMENT     : " << tok.value << "\n";
+        break;
 
     case TOKENTYPE::DIVIDE:
         std::cout << "DIVIDE        : " << tok.value << "\n";
@@ -130,6 +133,11 @@ Token lexer::getnextToken(std::istream &file, int& line)
         }
         return {TOKENTYPE::PLUS, "+", line};
     case '-':
+        if (file.peek() == '-')
+        {
+            file.get(ch);
+            return{ TOKENTYPE::DECREMENT, "--",line };
+        }
         return {TOKENTYPE::MINUS, "-",line};
     case '*':
         return {TOKENTYPE::MULTIPLY, "*",line};

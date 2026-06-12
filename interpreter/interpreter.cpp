@@ -195,7 +195,8 @@ Value interpreter::evaluateNode(const NODE& node)
 
 	case NODETYPE::POSTFIX_INCREMENT:
 		return evalexpr(node);
-
+	case NODETYPE::POSTFIX_DECREMENT:
+		return evalexpr(node);
 
 	default:
 		return node.value;
@@ -291,6 +292,45 @@ void interpreter::interpret(const NODE& node)
 			variables[node.value] = value;
 			return;
 		}
+	}
+	else if (node.nodetype == NODETYPE::ASSIGNMENT)
+	{
+		if (node.value.empty())
+		{
+			throw RuntimeError("assignment requires a variable name", node.line);
+		}
+
+		if (!has_key(variables, node.value))
+		{
+			throw RuntimeError("undefined variable '" + node.value + "'", node.line);
+		}
+
+		if (node.child.empty())
+		{
+			throw RuntimeError("assignment requires a value", node.line);
+		}
+
+		const Value rhs = evalexpr(node.child[0]);
+		const std::string varType = has_key(variable_types, node.value) ? variable_types[node.value] : "int";
+
+		if (varType == "string")
+		{
+			variables[node.value] = to_string(rhs);
+		}
+		else if (varType == "double")
+		{
+			variables[node.value] = to_double(rhs);
+		}
+		else if (varType == "bool")
+		{
+			variables[node.value] = to_bool(rhs);
+		}
+		else
+		{
+			variables[node.value] = to_int(rhs);
+		}
+
+		return;
 	}
 	else if (node.nodetype == NODETYPE::IF_STATEMENT) 
 	{
@@ -506,6 +546,34 @@ Value interpreter::evalexpr(const NODE& node)
 		else
 		{
 			throw RuntimeError("increment only works on int or double variables", node.line);
+		}
+
+		return current;
+	}
+	case NODETYPE::POSTFIX_DECREMENT:
+	{
+		if (node.value.empty())
+		{
+			throw RuntimeError("increment requires a variable name", node.line);
+		}
+
+		if (!has_key(variables, node.value))
+		{
+			throw RuntimeError("undefined variable '" + node.value + "'", node.line);
+		}
+
+		Value current = variables[node.value];
+		if (std::holds_alternative<int>(current))
+		{
+			variables[node.value] = std::get<int>(current) - 1;
+		}
+		else if (std::holds_alternative<double>(current))
+		{
+			variables[node.value] = std::get<double>(current) - 1.0;
+		}
+		else
+		{
+			throw RuntimeError("decrement only works on int or double variables", node.line);
 		}
 
 		return current;

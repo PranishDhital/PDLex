@@ -15,6 +15,7 @@ enum class TOKENTYPE
     EQUALSTO,
     PLUS,
     INCREMENT,
+    DECREMENT,
     MINUS,
     MULTIPLY,
     DIVIDE,

@@ -11,6 +11,7 @@ This repository is licensed under the Apache License 2.0. See [`LICENSE`](LICENS
 - Parse variable declarations and reassignments
 - Parse `print(...)` statements with multiple arguments
 - Parse `input(...)` statements
+- Parse and execute `for` loops
 - Evaluate basic arithmetic expressions with `+`, `-`, `*`, `/`, and `%`
 - Evaluate comparison operators `==`, `!=`, `<`, `>`, `<=`, `>=`
 - Parse and execute `if`, `else if`, and `else` statements
@@ -23,6 +24,7 @@ The current language supports a small subset of statements:
 - Reassignment with `name = expression;`
 - `print(...)` for values and variables
 - `input(...)` to accept user input
+- `for (init, condition, update)` loops
 - `if`, `else if`, `else` control flow
 - String literals with escape support for `\n`, `\t`, `\"`, and `\\`
 
@@ -53,6 +55,11 @@ else if (sum == 20)
 else
 {
     print("sum is 15 or less");
+}
+
+for (int i = 0, i < 3, i++)
+{
+    print(i);
 }
 ```
 
@@ -96,6 +103,7 @@ build\Debug\ppi.exe examples\test.pd
 
 - `test.pd` — exercises declarations, arithmetic, comments, printing, and input
 - `if.pd` — exercises if, else if, and else control flow with various conditions
+- `for.pd` — exercises `for` loops, `i++`, `i--`, reassignment in loop bodies, and negative number initializers
 
 These are good starting points if you want to see the current syntax in action.
 
@@ -104,6 +112,8 @@ These are good starting points if you want to see the current syntax in action.
 - The interpreter is intentionally simple and only covers a subset of expressions and statements.
 - `print(...)` outputs arguments separated by spaces.
 - Comparison operators return `1` for true and `0` for false when assigned to a variable.
+- `for` loop updates support simple single-step increments/decrements like `i++` and `i--`.
+- If you want a larger step, handle it in the loop body instead of the update slot.
 
 ## Project Files
 

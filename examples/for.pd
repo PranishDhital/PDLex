@@ -1,6 +1,121 @@
-// for ( val dec, comparesion, binary operation)
+/*
+    for (variable dec, compare, increment/decrement)
+    {
+        // code
+    }
+*/
 
-for (int i = 0, i < 2, i++)
+
+print("==================== FOR LOOP TESTS ====================");
+
+// Test 1: Basic ascending loop (0 to 4)
+int t1_pass = 1;
+int t1_last = -1;
+for (int i = 0, i < 5, i++)
 {
-	print ("Hello!");
+    t1_last = i;
 }
+if (t1_last == 4)
+{
+    print("Test 1 PASSED - ascending loop ran correctly");
+}
+else
+{
+    print("Test 1 FAILED - last value of i should be 4");
+}
+
+// Test 2: Accumulator - sum 1..5 = 15
+int sum = 0;
+for (int i = 1, i <= 5, i++)
+{
+    sum = sum + i;
+}
+if (sum == 15)
+{
+    print("Test 2 PASSED - sum is 15");
+}
+else
+{
+    print("Test 2 FAILED - sum should be 15");
+}
+
+// Test 3: Descending loop - j goes 3,2,1,0
+int t3_last = 99;
+for (int j = 3, j >= 0, j--)
+{
+    t3_last = j;
+}
+if (t3_last == 0)
+{
+    print("Test 3 PASSED - descending loop stopped at 0");
+}
+else
+{
+    print("Test 3 FAILED - last value of j should be 0");
+}
+
+// Test 4: Zero-iteration loop - body must not run
+int t4_ran = 0;
+for (int i = 5, i < 5, i++)
+{
+    t4_ran = 1;
+}
+if (t4_ran == 0)
+{
+    print("Test 4 PASSED - zero-iteration loop body never ran");
+}
+else
+{
+    print("Test 4 FAILED - body ran when condition was false from start");
+}
+
+// Test 5: Single-iteration loop - body runs exactly once
+int t5_count = 0;
+for (int i = 0, i < 1, i++)
+{
+    t5_count = t5_count + 1;
+}
+if (t5_count == 1)
+{
+    print("Test 5 PASSED - loop ran exactly once");
+}
+else
+{
+    print("Test 5 FAILED - loop should have run exactly once");
+}
+
+// Test 6: Nested loops - 3x3 = 9 iterations total
+int t6_count = 0;
+for (int row = 1, row <= 3, row++)
+{
+    for (int col = 1, col <= 3, col++)
+    {
+        t6_count = t6_count + 1;
+    }
+}
+if (t6_count == 9)
+{
+    print("Test 6 PASSED - nested loops ran 9 times total");
+}
+else
+{
+    print("Test 6 FAILED - nested loops should run 9 times");
+}
+
+// Test 7: Loop with string concatenation inside body
+int t7_i = 0;
+for (int i = 0, i < 3, i++)
+{
+    print("loop i = " + i);
+    t7_i = i;
+}
+if (t7_i == 2)
+{
+    print("Test 8 PASSED - string concat inside loop worked");
+}
+else
+{
+    print("Test 8 FAILED - string concat inside loop had issues");
+}
+
+print("==================== FOR LOOP TESTS DONE ================");
