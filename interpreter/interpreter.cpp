@@ -137,6 +137,36 @@ static bool is_string(const Value& v)
 	return std::holds_alternative<std::string>(v);
 }
 
+static bool to_bool(const Value& value)
+{
+	return std::visit(
+		[](const auto& v) -> bool
+		{
+			using T = std::decay_t<decltype(v)>;
+			if constexpr (std::is_same_v<T, bool>)
+			{
+				return v;
+			}
+			else if constexpr (std::is_same_v<T, int>)
+			{
+				return v != 0;
+			}
+			else if constexpr (std::is_same_v<T, double>)
+			{
+				return v != 0.0;
+			}
+			else if constexpr (std::is_same_v<T, std::string>)
+			{
+				return !v.empty();
+			}
+			else
+			{
+				return false;
+			}
+		},
+		value);
+}
+
 // Helper function to evaluate any node to a Value
 Value interpreter::evaluateNode(const NODE& node)
 {
@@ -161,6 +191,9 @@ Value interpreter::evaluateNode(const NODE& node)
 		return node.value;
 
 	case NODETYPE::BINARY_OP:
+		return evalexpr(node);
+
+	case NODETYPE::POSTFIX_INCREMENT:
 		return evalexpr(node);
 
 
@@ -262,14 +295,7 @@ void interpreter::interpret(const NODE& node)
 	else if (node.nodetype == NODETYPE::IF_STATEMENT) 
 	{
 		Value condResult = evalexpr(node.child[0]);
-
-		bool cond = std::visit([](const auto& v) -> bool {
-			using T = std::decay_t<decltype(v)>;
-			if constexpr (std::is_same_v<T, bool>)        return v;
-			if constexpr (std::is_same_v<T, int>)         return v != 0;
-			if constexpr (std::is_same_v<T, double>)      return v != 0.0;
-			if constexpr (std::is_same_v<T, std::string>) return !v.empty();
-			}, condResult);
+		bool cond = to_bool(condResult);
 
 		if (cond)
 		{
@@ -292,6 +318,28 @@ void interpreter::interpret(const NODE& node)
 				}
 			} /// the else block 
 		}
+		return;
+	}
+
+	else if (node.nodetype == NODETYPE::FOR_LOOP)
+	{
+		if (node.child.size() < 4)
+		{
+			throw RuntimeError("malformed for loop", node.line);
+		}
+
+		interpret(node.child[0]);
+
+		while (to_bool(evalexpr(node.child[1])))
+		{
+			for (auto& statement : node.child[3].child)
+			{
+				interpret(statement);
+			}
+
+			evalexpr(node.child[2]);
+		}
+
 		return;
 	}
 
@@ -432,6 +480,35 @@ Value interpreter::evalexpr(const NODE& node)
 			throw RuntimeError("undefined variable '" + node.value + "'", node.line);
 		}
 		return variables[node.value];
+	}
+
+	case NODETYPE::POSTFIX_INCREMENT:
+	{
+		if (node.value.empty())
+		{
+			throw RuntimeError("increment requires a variable name", node.line);
+		}
+
+		if (!has_key(variables, node.value))
+		{
+			throw RuntimeError("undefined variable '" + node.value + "'", node.line);
+		}
+
+		Value current = variables[node.value];
+		if (std::holds_alternative<int>(current))
+		{
+			variables[node.value] = std::get<int>(current) + 1;
+		}
+		else if (std::holds_alternative<double>(current))
+		{
+			variables[node.value] = std::get<double>(current) + 1.0;
+		}
+		else
+		{
+			throw RuntimeError("increment only works on int or double variables", node.line);
+		}
+
+		return current;
 	}
 
 	case NODETYPE::BINARY_OP:

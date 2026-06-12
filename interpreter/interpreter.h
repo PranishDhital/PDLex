@@ -13,8 +13,9 @@ class interpreter
 {
 public:
     void interpret(const NODE &node);
-    [[nodiscard]] bool hasError() const { return error_occurred; }
     void clearError() { error_occurred = false; }
+    [[nodiscard]] bool hasError() const { return error_occurred; }
+
 
 private:
     std::map<std::string, std::variant<std::string, int, double, bool>> variables;

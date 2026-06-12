@@ -15,6 +15,7 @@ enum class NODETYPE
 	BOOLEAN_LITERAL,
 	IDENT,
 	BINARY_OP,
+	POSTFIX_INCREMENT,
 	PRINT_STATEMENT,
 	VARIABLE_DECLARATION,
 	INPUT_EXPRESSION,
@@ -41,8 +42,10 @@ public:
 	NODE parseTerm(const std::vector<Token>& tokens, int& i);
 	NODE parseFactor(const std::vector<Token>& tokens, int& i);
 	NODE parsePrimary(const std::vector<Token>& tokens, int& i);
+	NODE parseIncrement(const std::vector<Token>& tokens, int& i);
 	NODE parseprint(const std::vector<Token>& tokens, int& i);
 	NODE parseVar(const std::vector<Token>& tokens, int& i);
+	NODE ns_parseVar(const std::vector<Token>& tokens, int& i);		// No semicolen
 	NODE parseReassign(const std::vector<Token>& tokens, int& i);
 	NODE parseInput(const std::vector<Token>& tokens, int& i);
 	NODE parseIfStatement(const std::vector<Token>& tokens, int& i);

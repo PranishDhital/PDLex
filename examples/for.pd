@@ -1,5 +1,6 @@
 // for ( val dec, comparesion, binary operation)
+
 for (int i = 0, i < 2, i++)
 {
-
+	print ("Hello!");
 }

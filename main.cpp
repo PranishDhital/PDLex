@@ -20,54 +20,8 @@ void processTokens(const std::vector<Token> &tokens, AST &ast, interpreter &inte
     int i = 0;
     while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::END)
     {
-        if (tokens[i].type == TOKENTYPE::INT ||
-            tokens[i].type == TOKENTYPE::DOUBLE ||
-            tokens[i].type == TOKENTYPE::STRING ||
-            tokens[i].type == TOKENTYPE::BOOLEAN)
-        {
-            NODE tree = ast.parseVar(tokens, i);
-            interp.interpret(tree);
-        }
-        else if (tokens[i].type == TOKENTYPE::PRINT)
-        {
-            NODE tree = ast.parseprint(tokens, i);
-            interp.interpret(tree);
-        }
-        else if (tokens[i].type == TOKENTYPE::INPUT)
-        {
-            NODE tree = ast.parseInput(tokens, i);
-            interp.interpret(tree);
-        }
-        else if (tokens[i].type == TOKENTYPE::IDENT)
-        {
-            if (i + 1 < static_cast<int>(tokens.size()) &&
-                tokens[i + 1].type == TOKENTYPE::EQUALSTO)
-            {
-                NODE tree = ast.parseReassign(tokens, i);
-                interp.interpret(tree);
-            }
-            else if (i + 1 < static_cast<int>(tokens.size()) &&
-                     tokens[i + 1].type == TOKENTYPE::LPAREN)
-            {
-                NODE tree = ast.parsecall(tokens, i);
-                interp.interpret(tree);
-            }
-            else
-            {
-                std::cerr << "Warning: unexpected token '" << tokens[i].value << "' at line " << tokens[i].line << "\n";
-                i++;
-            }
-        }
-        else if (tokens[i].type == TOKENTYPE::IF)
-        {
-            NODE tree = ast.parseIfStatement(tokens, i);
-            interp.interpret(tree);
-        }
-        else
-        {
-            std::cerr << "Warning: unexpected token '" << tokens[i].value << "' at line " << tokens[i].line << "\n";
-            i++;
-        }
+        NODE tree = ast.parseStatement(tokens, i);
+        interp.interpret(tree);
     }
 }
 

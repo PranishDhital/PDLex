@@ -259,6 +259,17 @@ NODE AST::parsePrimary(const std::vector<Token>& tokens, int& i)
 		node.value = tokens[i].value;
 		node.line = tokens[i].line;
 		i++;
+
+		if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::INCREMENT)
+		{
+			NODE inc;
+			inc.nodetype = NODETYPE::POSTFIX_INCREMENT;
+			inc.value = node.value;
+			inc.line = node.line;
+			i++;
+			return inc;
+		}
+
 		return node;
 	}
 	else if (tokens[i].type == TOKENTYPE::INPUT)
@@ -313,6 +324,24 @@ NODE AST::parsePrimary(const std::vector<Token>& tokens, int& i)
 		return node;
 	}
 	throw SyntaxError("Unexpected token in primary expression", tokens[i].line, filename);
+}
+
+NODE AST::parseIncrement(const std::vector<Token>& tokens, int& i)
+{
+	NODE node = parsePrimary(tokens, i);
+
+	if (node.nodetype != NODETYPE::POSTFIX_INCREMENT)
+	{
+		throw SyntaxError("Expected '++' after variable name", tokens[i].line, filename);
+	}
+
+	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI)
+	{
+		throw SyntaxError("Expected ';' after increment expression", i < static_cast<int>(tokens.size()) ? tokens[i].line : node.line, filename);
+	}
+
+	i++;
+	return node;
 }
 
 NODE AST::parseExpr(const std::vector<Token>& tokens, int& i)
@@ -443,6 +472,21 @@ NODE AST::parseReassign(const std::vector<Token>& tokens, int& i)
 	node.value = tokens[i].value;
 	node.line = tokens[i].line;
 	i++; // skip the IDENT
+
+	if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::INCREMENT)
+	{
+		NODE inc;
+		inc.nodetype = NODETYPE::POSTFIX_INCREMENT;
+		inc.value = node.value;
+		inc.line = node.line;
+		i++;
+
+		if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::SEMI)
+		{
+			i++;
+		}
+		return inc;
+	}
 
 	// skip '='
 	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::EQUALSTO)
@@ -621,19 +665,42 @@ NODE AST::parseIfStatement(const std::vector<Token>& tokens, int& i)
 
 NODE AST::parseStatement(const std::vector<Token>& tokens, int& i)
 {
-	if (tokens[i].type == TOKENTYPE::IF)
+	if (tokens[i].type == TOKENTYPE::INT ||
+		tokens[i].type == TOKENTYPE::DOUBLE ||
+		tokens[i].type == TOKENTYPE::STRING ||
+		tokens[i].type == TOKENTYPE::BOOLEAN)
 	{
-		return parseIfStatement(tokens, i);
+		return parseVar(tokens, i);
 	}
 	else if (tokens[i].type == TOKENTYPE::PRINT)
 	{
 		return parseprint(tokens, i);
 	}
+	else if (tokens[i].type == TOKENTYPE::INPUT)
+	{
+		return parseInput(tokens, i);
+	}
+	if (tokens[i].type == TOKENTYPE::IF)
+	{
+		return parseIfStatement(tokens, i);
+	}
+	else if (tokens[i].type == TOKENTYPE::FOR)
+	{
+		return parseForLoop(tokens, i);
+	}
 	else if (tokens[i].type == TOKENTYPE::IDENT)
 	{
-		if (tokens[i + 1].type == TOKENTYPE::EQUALSTO)
+		if (i + 1 < static_cast<int>(tokens.size()) && tokens[i + 1].type == TOKENTYPE::EQUALSTO)
 		{
 			return parseReassign(tokens, i);
+		}
+		if (i + 1 < static_cast<int>(tokens.size()) && tokens[i + 1].type == TOKENTYPE::LPAREN)
+		{
+			return parsecall(tokens, i);
+		}
+		if (i + 1 < static_cast<int>(tokens.size()) && tokens[i + 1].type == TOKENTYPE::INCREMENT)
+		{
+			return parseIncrement(tokens, i);
 		}
 	}
 
@@ -641,62 +708,107 @@ NODE AST::parseStatement(const std::vector<Token>& tokens, int& i)
 }
 
 
-//NODE AST::parseForLoop(const std::vector<Token>& tokens, int& i)
-//{
-//	NODE node;
-//	node.nodetype = NODETYPE::FOR_LOOP;
-//	node.line = tokens[i].line;
-//
-//	i++; // skip for 
-//	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
-//	{
-//		throw SyntaxError("Expected '(' after 'for'", tokens[i].line, filename);
-//	}
-//	i++;
-//
-//	node.child.push_back(parseVar(tokens, i));
-//
-//	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA)
-//	{
-//		throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
-//	}
-//	i++;
-//
-//	node.child.push_back(parseComparison(tokens, i));
-//	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA)
-//	{
-//		throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
-//	}
-//	i++;
-//
-//	node.child.push_back(parseExpr(tokens, i));
-//	i++;
-//
-//
-//	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RPAREN)
-//	{
-//		throw SyntaxError("Expected ')' to close the loop condition", tokens[i].line, filename);
-//	}
-//	i++;
-//	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::LCURLEY)
-//	{
-//		throw SyntaxError("Waring : Expected '{' after ')'", tokens[i].line, filename);
-//	}
-//
-//	i++;
-//	// The for loop code execution
-//	NODE forblock;
-//	forblock.nodetype = NODETYPE::BLOCK;
-//
-//	while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RCURLEY)
-//	{
-//		forblock.child.push_back(parseStatement(tokens, i));
-//	}
-//
-//	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RCURLEY)
-//	{
-//		throw SyntaxError("Warning : Expected '}' to close the loop", tokens[i].line, filename);
-//	}
-//
-//	return node;
-//}
+NODE AST::parseForLoop(const std::vector<Token>& tokens, int& i)
+{
+	NODE node;
+	node.nodetype = NODETYPE::FOR_LOOP;
+	node.line = tokens[i].line;
+
+	i++; // skip for 
+	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
+	{
+		throw SyntaxError("Expected '(' after 'for'", tokens[i].line, filename);
+	}
+	i++;
+
+	node.child.push_back(ns_parseVar(tokens, i));
+
+	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA)
+	{
+		throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
+	}
+	i++;
+
+	node.child.push_back(parseComparison(tokens, i));
+	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA)
+	{
+		throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
+	}
+	i++;
+
+	node.child.push_back(parseExpr(tokens, i));
+
+
+	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RPAREN)
+	{
+		throw SyntaxError("Expected ')' to close the loop condition", tokens[i].line, filename);
+	}
+	i++;
+	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::LCURLEY)
+	{
+		throw SyntaxError("Waring : Expected '{' after ')'", tokens[i].line, filename);
+	}
+
+	i++;
+	// The for loop code execution
+	NODE forblock;
+	forblock.nodetype = NODETYPE::BLOCK;
+
+	while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RCURLEY)
+	{
+		forblock.child.push_back(parseStatement(tokens, i));
+	}
+
+	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RCURLEY)
+	{
+		throw SyntaxError("Warning : Expected '}' to close the loop", tokens[i].line, filename);
+	}
+	i++;
+	node.child.push_back(forblock);
+	return node;
+}
+
+
+NODE AST::ns_parseVar(const std::vector<Token>& tokens, int& i)
+{
+	NODE node;
+	node.nodetype = NODETYPE::VARIABLE_DECLARATION;
+	node.line = tokens[i].line;
+
+	if (i >= static_cast<int>(tokens.size()))
+	{
+		return node;
+	}
+
+	if (tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE)
+	{
+		return node;
+	}
+
+	const std::string declaredType = tokens[i].value;
+	node.line = tokens[i].line;
+	i++;
+
+	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::IDENT)
+	{
+		throw SyntaxError("Need to declare a variable", node.line, filename);
+	}
+	node.value = tokens[i].value;
+
+	// Store the declared type as the first child node for interpreter to use
+	NODE typeNode;
+	typeNode.nodetype = NODETYPE::STRING_LITERAL; // reuse for type info
+	typeNode.value = declaredType;
+	node.child.push_back(typeNode);
+
+	i++;
+
+	if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::EQUALSTO)
+	{
+		i++;
+		const NODE expr = parseExpr(tokens, i);
+		node.child.push_back(expr);
+	}
+
+	return node;
+}
