@@ -1,132 +1,309 @@
 # PDLex
 
-PDLex is a small C++ prototype for a simple `.pd` language. It started as a lexer and grew into a tiny parser/interpreter that can read a file, build a lightweight AST, and execute a few basic statements.
+PDLex is a small C++20 prototype for a simple `.pd` language. It started as a lexer and grew into a tiny parser/interpreter that can read a file, build a lightweight AST, and execute the supported statements.
 
 This repository is licensed under the Apache License 2.0. See [`LICENSE`](LICENSE) for the full text.
 
 For the language reference, see [`examples/syntax.md`](examples/syntax.md).
 
-## What It Can Do
+## Overview
 
-- Tokenize identifiers, numbers, strings, booleans, operators, and punctuation
-- Ignore `//` single-line comments and `/* ... */` block comments
-- Parse variable declarations and reassignments
-- Parse `print(...)` statements with multiple arguments
-- Parse `input(...)` statements
-- Parse and execute `for` loops
-- Evaluate basic arithmetic expressions with `+`, `-`, `*`, `/`, and `%`
-- Evaluate comparison operators `==`, `!=`, `<`, `>`, `<=`, `>=`
-- Parse and execute `if`, `else if`, and `else` statements
+PDLex currently supports:
 
-## Language Snapshot
+- Lexing identifiers, numbers, strings, booleans, operators, and punctuation
+- Single-line `//` comments and block `/* ... */` comments
+- Variable declarations and reassignment
+- `print(...)` and `printnl(...)`
+- `input(...)`
+- `if`, `else if`, and `else`
+- `for` loops
+- `while` loops
+- Basic arithmetic, comparison, and equality expressions
+- Postfix increment and decrement with `++` and `--`
 
-The current language supports a small subset of statements:
+## Language Support
 
-- `int`, `double`, `string`, and `bool` variable declarations
-- Reassignment with `name = expression;`
-- `print(...)` for values and variables
-- `input(...)` to accept user input
-- `for (init, condition, update)` loops
-- `if`, `else if`, `else` control flow
-- String literals with escape support for `\n`, `\t`, `\"`, and `\\`
+### Keywords
 
-Example:
+The language currently recognizes these keywords:
+
+- `int`
+- `double`
+- `string`
+- `bool`
+- `print`
+- `printnl`
+- `input`
+- `if`
+- `else`
+- `for`
+- `while`
+
+Boolean values use `true` and `false`.
+
+### Variables
+
+Declare variables with a type and name, with or without an initializer:
 
 ```pd
-int x = 10;
-double y = 40.2;
-string first_name = "Pranish";
-string last_name;
-bool ok = true;
+int count;
+int total = 10;
+double ratio = 2.5;
+string name = "PDLex";
+bool ready = true;
+```
 
-int sum = x + 10;
+Supported types:
 
-input("Lastname: " , last_name);
-print("Hello," + first_name + last_name);
-print("Sum:" + sum);
-print(ok);
+- `int`
+- `double`
+- `string`
+- `bool`
 
-if (sum > 15)
+Reassignment uses `=`:
+
+```pd
+count = count + 1;
+name = "new value";
+ready = false;
+```
+
+Postfix increment and decrement are also supported:
+
+```pd
+count++;
+count--;
+```
+
+### Expressions
+
+Supported operators:
+
+- Arithmetic: `+`, `-`, `*`, `/`, `%`
+- Comparison: `<`, `>`, `<=`, `>=`
+- Equality: `==`, `!=`
+- Unary plus/minus: `+expr`, `-expr`
+
+Operator precedence is:
+
+1. Unary `+` and `-`
+2. `*`, `/`, `%`
+3. `+`, `-`
+4. `<`, `>`, `<=`, `>=`
+5. `==`, `!=`
+
+### Printing
+
+Use `print(...)` to output values separated by spaces:
+
+```pd
+print("Hello", name, count);
+```
+
+Use `printnl(...)` for the same style of output without a trailing newline:
+
+```pd
+printnl("Loading");
+printnl(".");
+printnl(".");
+printnl(".");
+```
+
+### Input
+
+Use `input(...)` to read user input into a variable.
+
+Supported forms:
+
+```pd
+input(name);
+input("Enter your name: ", name);
+input("Enter age: ", age);
+```
+
+You can also use `input(...)` inside an assignment, for example:
+
+```pd
+int age = input("Enter age: ");
+```
+
+### Conditionals
+
+Use `if`, `else if`, and `else` for branching:
+
+```pd
+if (score >= 90)
 {
-    print("sum is greater than 15");
+    print("A");
 }
-else if (sum == 20)
+else if (score >= 80)
 {
-    print("sum is exactly 20");
+    print("B");
 }
 else
 {
-    print("sum is 15 or less");
+    print("C or lower");
 }
+```
 
-for (int i = 0, i < 3, i++)
+General form:
+
+```pd
+if (condition)
+{
+    statements
+}
+else if (condition)
+{
+    statements
+}
+else
+{
+    statements
+}
+```
+
+### Loops
+
+`for` loops use three comma-separated parts inside the parentheses:
+
+```pd
+for (int i = 0, i < 5, i++)
 {
     print(i);
 }
 ```
 
-## Build
+General form:
 
-Use any C++17-compatible compiler. With `cmake`, build it like this:
-
-```bash
-cmake --build .
+```pd
+for (declaration, condition, update)
+{
+    statements
+}
 ```
 
-If you prefer a different output name, change `-o ppi` to whatever you want in the `CMakeLists.txt`.
+The update slot currently supports postfix `++` and `--`.
+
+`while` loops are also supported:
+
+```pd
+while (running)
+{
+    print("looping");
+}
+```
+
+General form:
+
+```pd
+while (condition)
+{
+    statements
+}
+```
+
+### Comments
+
+Single-line comments:
+
+```pd
+// comment
+```
+
+Block comments:
+
+```pd
+/*
+    comment
+*/
+```
+
+## Example
+
+```pd
+int i = 0;
+bool running = true;
+
+while (running)
+{
+    printnl(i);
+    i++;
+
+    if (i >= 5)
+    {
+        running = false;
+    }
+}
+```
+
+## Build
+
+Use any C++20-compatible compiler. With CMake, build the project like this:
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+The executable target is named `ppi`.
 
 ## Run
 
-Pass a `.pd` file to the executable (if compiled in Release):
-
-```bash
-./build/Release/ppi examples/test.pd
-```
-
-On Windows (Release):
+Pass a `.pd` file to the executable:
 
 ```powershell
-build\Release\ppi.exe examples\test.pd
+build\bin\Debug\ppi.exe examples\test.pd
 ```
-
-On Linux/Mac (Debug):
-
-```bash
-./build/Debug/ppi examples/test.pd
-```
-
-On Windows (Debug):
 
 ```powershell
-build\Debug\ppi.exe examples\test.pd
+build\bin\Release\ppi.exe examples\test.pd
 ```
+
+On Linux or macOS, the paths will look similar under `build/bin/Debug` or `build/bin/Release`.
 
 ## Example Files
 
-- `test.pd` — exercises declarations, arithmetic, comments, printing, and input
-- `if.pd` — exercises if, else if, and else control flow with various conditions
-- `for.pd` — exercises `for` loops, `i++`, `i--`, reassignment in loop bodies, and negative number initializers
-- [`syntax.md`](examples/syntax.md) — language syntax reference for keywords and statement forms
+- `test.pd` - general language coverage and mixed syntax
+- `if.pd` - conditional branching examples
+- `for.pd` - `for` loop examples, including nested loops
+- `while.pd` - `while` loop examples
+- `input.pd` - input handling examples
+- `b_math.pd` - arithmetic and precedence checks
+- `c_comparison.pd` - comparison operator checks
+- `syntax.md` - language syntax reference
 
-These are good starting points if you want to see the current syntax in action.
+These files are the best starting point if you want to see the current syntax in action.
+
+## Project Files
+
+- `main.cpp` - program entry point and statement dispatch
+- `lexer/lexer.cpp` and `lexer/lexer.h` - tokenization
+- `ast/AST.cpp` and `ast/AST.h` - parsing into AST nodes
+- `interpreter/interpreter.cpp` and `interpreter/interpreter.h` - execution of parsed nodes
+- `error/error.cpp` and `error/error.h` - syntax and runtime error formatting
 
 ## Notes
 
 - The interpreter is intentionally simple and only covers a subset of expressions and statements.
-- `print(...)` outputs arguments separated by spaces.
-- Comparison operators return `1` for true and `0` for false when assigned to a variable.
-- `for` loop updates support simple single-step increments/decrements like `i++` and `i--`.
-- If you want a larger step, handle it in the loop body instead of the update slot.
+- `print(...)` and `printnl(...)` separate arguments with spaces.
+- Comparison operators evaluate to `1` for true and `0` for false when used in expressions.
+- `for` loop updates support only simple postfix increments and decrements.
+- The language reference in [`examples/syntax.md`](examples/syntax.md) should be treated as the source of truth for supported forms.
 
-## Project Files
+## vscode Extension
+The zip folder in the release contains a .vsix file which contains all the things to support syntax highlighting in vscode for the .pd files.
 
-- `main.cpp` — program entry point and statement dispatch
-- `lexer.cpp` / `lexer.h` — tokenization
-- `AST.cpp` / `AST.h` — parsing into AST nodes
-- `interpreter.cpp` / `interpreter.h` — execution of parsed nodes
-- `examples/test.pd` — sample input file
-- `examples/if.pd` — if statement test file
+### Installation steps for .vsix :
+
+The file name is `pdlex-0.0.1.vsix` 
+- Step 1: `ctrl + shift + x` , to open vscode extension market
+- Step 2: At the top right of the extension market there is a `...` press it 
+- Step 3: Select Install from VSIX
+
+- step 4: find and click the `pdlex-0.0.1.vsix`
+- step 5: To find the extension in your extension market search `pdlex` , after installation
 
 ## Status
 
-This is still a work-in-progress toy language, but it is a solid base for experimenting with lexing, parsing, and interpretation in C++.
+This is no longer getting updates from 1.4 onwards
