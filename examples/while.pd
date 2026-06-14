@@ -1,0 +1,15 @@
+bool running = true;
+int i = 0;
+
+while (running == true)
+{
+	print("while loop iteration", i, running);
+	i++;
+
+	if (i >= 5)
+	{
+		running = false;
+	}
+}
+
+print("done", i, running);

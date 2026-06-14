@@ -4,6 +4,8 @@ PDLex is a small C++ prototype for a simple `.pd` language. It started as a lexe
 
 This repository is licensed under the Apache License 2.0. See [`LICENSE`](LICENSE) for the full text.
 
+For the language reference, see [`examples/syntax.md`](examples/syntax.md).
+
 ## What It Can Do
 
 - Tokenize identifiers, numbers, strings, booleans, operators, and punctuation
@@ -104,6 +106,7 @@ build\Debug\ppi.exe examples\test.pd
 - `test.pd` — exercises declarations, arithmetic, comments, printing, and input
 - `if.pd` — exercises if, else if, and else control flow with various conditions
 - `for.pd` — exercises `for` loops, `i++`, `i--`, reassignment in loop bodies, and negative number initializers
+- [`syntax.md`](examples/syntax.md) — language syntax reference for keywords and statement forms
 
 These are good starting points if you want to see the current syntax in action.
 

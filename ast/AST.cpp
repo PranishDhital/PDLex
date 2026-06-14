@@ -776,6 +776,10 @@ NODE AST::parseStatement(const std::vector<Token>& tokens, int& i)
 	{
 		return parseprint(tokens, i);
 	}
+	else if (tokens[i].type == TOKENTYPE::PRINT_NL)
+	{
+		return parseprintNL(tokens, i);
+	}
 	else if (tokens[i].type == TOKENTYPE::INPUT)
 	{
 		return parseInput(tokens, i);
@@ -783,6 +787,10 @@ NODE AST::parseStatement(const std::vector<Token>& tokens, int& i)
 	if (tokens[i].type == TOKENTYPE::IF)
 	{
 		return parseIfStatement(tokens, i);
+	}
+	else if (tokens[i].type == TOKENTYPE::WHILE)
+	{
+		return parseWhileLoop(tokens, i);
 	}
 	else if (tokens[i].type == TOKENTYPE::FOR)
 	{
@@ -913,6 +921,147 @@ NODE AST::ns_parseVar(const std::vector<Token>& tokens, int& i)
 		const NODE expr = parseExpr(tokens, i);
 		node.child.push_back(expr);
 	}
+
+	return node;
+}
+
+
+NODE AST::parseWhileLoop(const std::vector<Token>& tokens, int& i)
+{
+	NODE node;
+	node.nodetype = NODETYPE::WHILE_LOOP;
+	node.line = tokens[i].line;
+
+	i++;
+	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
+	{
+		throw SyntaxError("Expected '(' after 'while'", tokens[i].line, filename);
+	}
+	i++;
+
+	// compare
+	node.child.push_back(parseExpr(tokens, i));
+
+	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RPAREN)
+	{
+		throw SyntaxError("Expected ')' after 'condition'", tokens[i].line, filename);
+	}
+	i++;
+
+	if (i >= static_cast <int> (tokens.size()) || tokens[i].type != TOKENTYPE::LCURLEY)
+	{
+		throw SyntaxError("Expected '{' to add a while loop block", tokens[i].line, filename);
+	}
+	i++;
+
+	NODE whileBlock;
+	whileBlock.nodetype = NODETYPE::BLOCK;
+
+	while (i < static_cast <int>(tokens.size()) && tokens[i].type != TOKENTYPE::RCURLEY)
+	{
+		whileBlock.child.push_back(parseStatement(tokens,i));
+	}
+	if (i >= static_cast <int>(tokens.size()) || tokens[i].type != TOKENTYPE::RCURLEY)
+	{
+		throw SyntaxError("Warning : Expected '}' to close the loop", tokens[i].line, filename);
+	}
+	i++;
+	
+	node.child.push_back(whileBlock);
+
+	return node;
+}
+
+
+
+NODE AST::parseprintNL(const std::vector<Token>& tokens, int& i)
+{
+	NODE node;
+	node.nodetype = NODETYPE::PRINT_NL_STATEMENT;
+	node.line = tokens[i].line;
+
+	if (i >= static_cast<int>(tokens.size()))
+	{
+		return node;
+	}
+
+	if (tokens[i].type != TOKENTYPE::PRINT_NL)
+	{
+		return node;
+	}
+
+	node.value = tokens[i].value;
+	node.line = tokens[i].line;
+	i++;
+
+	// skiping lparen
+	if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::LPAREN)
+	{
+		throw SyntaxError("Expected '('", node.line, filename);
+	}
+	i++;
+
+	while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RPAREN)
+	{
+		if (tokens[i].type == TOKENTYPE::END)
+		{
+			throw SyntaxError("Expected ')'", tokens[i].line, filename);
+		}
+		else if (tokens[i].type == TOKENTYPE::NUMBER)
+		{
+			NODE arg;
+			arg.nodetype = NODETYPE::NUMBER_LITERAL;
+			arg.value = tokens[i].value;
+			node.child.push_back(arg);
+			i++;
+			continue;
+		}
+		else if (tokens[i].type == TOKENTYPE::IDENT)
+		{
+			NODE arg;
+			arg.nodetype = NODETYPE::IDENT;
+			arg.value = tokens[i].value;
+			node.child.push_back(arg);
+			i++;
+			continue;
+		}
+		else if (tokens[i].type == TOKENTYPE::STRING_LITERAL)
+		{
+			NODE arg;
+			arg.nodetype = NODETYPE::STRING_LITERAL;
+			arg.value = tokens[i].value;
+			node.child.push_back(arg);
+			i++;
+			continue;
+		}
+		else if (tokens[i].type == TOKENTYPE::BOOL_LITERAL)
+		{
+			NODE arg;
+			arg.nodetype = NODETYPE::BOOLEAN_LITERAL;
+			arg.value = tokens[i].value;
+			node.child.push_back(arg);
+			i++;
+			continue;
+		}
+		else if (tokens[i].type == TOKENTYPE::EXCLAMATION || tokens[i].type == TOKENTYPE::COMMA)
+		{
+			i++;
+			continue;
+		}
+		i++;
+	}
+
+	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::RPAREN)
+	{
+		throw SyntaxError("Expected ')'", tokens[i].line, filename);
+	}
+	i++;
+
+	if (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::SEMI)
+	{
+		throw SyntaxError("Expected ';' at the end", tokens[i].line, filename);
+	}
+	i++;
 
 	return node;
 }

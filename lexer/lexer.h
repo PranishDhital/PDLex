@@ -42,6 +42,8 @@ enum class TOKENTYPE
     IF,
     ElSE,
     FOR,
+    WHILE,
+    PRINT_NL,
 
     END,
     UNDEFINED

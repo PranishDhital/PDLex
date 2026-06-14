@@ -98,6 +98,12 @@ void lexer::print(const Token &tok)
     case TOKENTYPE::FOR:
         std::cout << "FOR           : " << tok.value << "\n";
         break;
+    case TOKENTYPE::WHILE:
+        std::cout << "WHILE         : " << tok.value << "\n";
+        break;
+    case TOKENTYPE::PRINT_NL:
+        std::cout << "PRINT_NL      : " << tok.value << "\n";
+        break;
     default:
         std::cout << "UNKNOWN       : " << tok.value << "\n";
         break;
@@ -283,27 +289,27 @@ Token lexer::getnextToken(std::istream &file, int& line)
 
         if (ident == "int")
         {
-            return {TOKENTYPE::INT, ident, line};
+            return { TOKENTYPE::INT, ident, line };
         }
         else if (ident == "double")
         {
-            return {TOKENTYPE::DOUBLE, ident, line};
+            return { TOKENTYPE::DOUBLE, ident, line };
         }
         else if (ident == "string")
         {
-            return {TOKENTYPE::STRING, ident, line};
+            return { TOKENTYPE::STRING, ident, line };
         }
         else if (ident == "bool")
         {
-            return {TOKENTYPE::BOOLEAN, ident, line};
+            return { TOKENTYPE::BOOLEAN, ident, line };
         }
         else if (ident == "true" || ident == "false")
         {
-            return {TOKENTYPE::BOOL_LITERAL, ident, line};
+            return { TOKENTYPE::BOOL_LITERAL, ident, line };
         }
         else if (ident == "print")
         {
-            return {TOKENTYPE::PRINT, ident, line};
+            return { TOKENTYPE::PRINT, ident, line };
         }
         else if (ident == "input")
         {
@@ -320,6 +326,14 @@ Token lexer::getnextToken(std::istream &file, int& line)
         else if (ident == "for")
         {
             return { TOKENTYPE::FOR, ident, line };
+        }
+        else if (ident == "while")
+        {
+            return { TOKENTYPE::WHILE, ident, line };
+        }
+        else if (ident == "printnl")
+        {
+            return { TOKENTYPE::PRINT_NL, ident, line };
         }
 
         return {TOKENTYPE::IDENT, ident, line};

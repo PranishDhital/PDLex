@@ -6,53 +6,52 @@
     This is a multi line comment
 */
 
-int x = 10;
-int y = 200 ;
-double z = 40.2;
-string Name = "Pranish";
-string lastname = "Pookie";
-bool isgood = true;
+// Simple program to display the language 
 
-int sum = 10 + 10;
-double add = x + y  + 10.2;
-int subraction =  x - y;
-int mod = 10 % 7;
+string continue = "yes";
 
-int user_input = 0;
-string user_name;
-
-string line = "____________________________";
-
-
-print (x);
-print (y);
-print (z);
-print (Name + lastname);       // even without the '+' it will concatenate but use '+'  
-print ("hi," + Name);
-print ("The sum is : " + sum);
-print ("The sum is : " + add);
-print ("Minus : " + subraction);
-print ("MOD : " + mod);
-print (isgood);         // prints 1 as true and 0 and false
-
-input ("User age : ", user_input);
-input ("User Name :", user_name);
-
-print (line);
-print ("Age : " + user_input);
-print("Name : " + user_name);
-print (line);
-
-print("Hello,World!");
-
-int num = 0 ;
-intput ("Enter an number thats not 0 or -ve : ", num )
-
-if (num%2 == 0)
+while (continue == "yes")
 {
-    print ("its even");
-}
-else 
-{
-    print ("its odd");
+    string name;
+    string line = " -------------------------- ";
+    string checkHuman;
+    int age = 0;
+    double weight = 0; 
+    bool human = true;
+
+    input ("Enter your full name : ", name);
+    input ("Enter your age : ", age);
+    input ("Enter your weight :", weight);
+    input ("Are you an human (yes/no): ", checkHuman);
+
+    print (line);
+    print ("Name : " + name);
+
+    // for the age
+    if (age < 0 )
+    {
+    print ("Age group : Negative age is invalid");
+    }
+    else if (age <= 18)
+    {
+        print ("Age group : Child");
+    }
+    else 
+    {
+        print ("Age group : Adult");
+    }
+
+    // check human
+    if (checkHuman == "yes")
+    {print ("Species : Human");} 
+    else {print ("Species : not human");}
+
+    print (line);
+
+    for (int i = 0, i <= 5, i++)
+    {
+        printnl (i);        // printnl -- prints with no new line , prints in the same line
+    }
+    printnl ("\n");
+    input ("do you wanna do it again (yes/no)? :", continue); 
 }

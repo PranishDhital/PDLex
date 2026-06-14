@@ -300,12 +300,12 @@ void interpreter::interpret(const NODE& node)
 			throw RuntimeError("assignment requires a variable name", node.line);
 		}
 
-		if (!has_key(variables, node.value))
+		else if (!has_key(variables, node.value))
 		{
 			throw RuntimeError("undefined variable '" + node.value + "'", node.line);
 		}
 
-		if (node.child.empty())
+		else if (node.child.empty())
 		{
 			throw RuntimeError("assignment requires a value", node.line);
 		}
@@ -357,7 +357,14 @@ void interpreter::interpret(const NODE& node)
 					interpret(statement);
 				}
 			} /// the else block 
-		}
+			}
+			return;
+	}
+	else if (node.nodetype == NODETYPE::POSTFIX_INCREMENT ||
+		node.nodetype == NODETYPE::POSTFIX_DECREMENT)
+	{
+		// execute standalone i++ or i-- statements so they mutate the variable
+		evalexpr(node);
 		return;
 	}
 
@@ -382,6 +389,25 @@ void interpreter::interpret(const NODE& node)
 
 		return;
 	}
+	else if (node.nodetype == NODETYPE::WHILE_LOOP)
+	{
+		if(node.child.size() < 2)
+		{
+			throw RuntimeError("malformed while loop", node.line);
+		}
+
+		// evaluate condition first
+		while (to_bool(evalexpr(node.child[0])))
+		{
+			// execute body
+			for (auto& statement : node.child[1].child)
+			{
+				interpret(statement);
+			}
+		}
+
+		return;
+	}
 
 	else if (node.nodetype == NODETYPE::PRINT_STATEMENT)
 	{
@@ -400,6 +426,23 @@ void interpreter::interpret(const NODE& node)
 			}
 		}
 		std::cout << "\n";
+	}
+	else if (node.nodetype == NODETYPE::PRINT_NL_STATEMENT)
+	{
+		for (size_t i = 0; i < node.child.size(); i++)
+		{
+			const NODE& arg = node.child[i];
+			Value result = evaluateNode(arg);
+
+			std::visit([](const auto& v)
+				{ std::cout << v; },
+				result);
+
+			if (i + 1 < node.child.size())
+			{
+				std::cout << " ";
+			}
+		}
 	}
 
 	else if (node.nodetype == NODETYPE::INPUT_EXPRESSION)
@@ -602,11 +645,11 @@ Value interpreter::evalexpr(const NODE& node)
 				const double r = to_double(right);
 
 				if (node.value == "==") return (l == r) ? 1 : 0;
-				if (node.value == "!=") return (l != r) ? 1 : 0;
-				if (node.value == "<")  return (l < r) ? 1 : 0;
-				if (node.value == ">")  return (l > r) ? 1 : 0;
-				if (node.value == "<=") return (l <= r) ? 1 : 0;
-				if (node.value == ">=") return (l >= r) ? 1 : 0;
+				else if (node.value == "!=") return (l != r) ? 1 : 0;
+				else if (node.value == "<")  return (l < r) ? 1 : 0;
+				else if (node.value == ">")  return (l > r) ? 1 : 0;
+				else if (node.value == "<=") return (l <= r) ? 1 : 0;
+				else if (node.value == ">=") return (l >= r) ? 1 : 0;
 			}
 			else
 			{
@@ -615,11 +658,11 @@ Value interpreter::evalexpr(const NODE& node)
 				const std::string r = to_string(right);
 
 				if (node.value == "==") return (l == r) ? 1 : 0;
-				if (node.value == "!=") return (l != r) ? 1 : 0;
-				if (node.value == "<")  return (l < r) ? 1 : 0;
-				if (node.value == ">")  return (l > r) ? 1 : 0;
-				if (node.value == "<=") return (l <= r) ? 1 : 0;
-				if (node.value == ">=") return (l >= r) ? 1 : 0;
+				else if (node.value == "!=") return (l != r) ? 1 : 0;
+				else if (node.value == "<")  return (l < r) ? 1 : 0;
+				else if (node.value == ">")  return (l > r) ? 1 : 0;
+				else if (node.value == "<=") return (l <= r) ? 1 : 0;
+				else if (node.value == ">=") return (l >= r) ? 1 : 0;
 			}
 		}
 
@@ -631,9 +674,9 @@ Value interpreter::evalexpr(const NODE& node)
 				const double r = to_double(right);
 
 				if (node.value == "+") return l + r;
-				if (node.value == "-") return l - r;
-				if (node.value == "*") return l * r;
-				if (node.value == "/")
+				else if (node.value == "-") return l - r;
+				else if (node.value == "*") return l * r;
+				else if (node.value == "/")
 				{
 					if (r == 0.0)
 					{
@@ -642,7 +685,7 @@ Value interpreter::evalexpr(const NODE& node)
 					}
 					return l / r;
 				}
-				if (node.value == "%")
+				else if (node.value == "%")
 				{
 					// fmod for doubles
 					if (r == 0.0)
@@ -669,9 +712,9 @@ Value interpreter::evalexpr(const NODE& node)
 			const int r = to_int(right);
 
 			if (node.value == "+") return l + r;
-			if (node.value == "-") return l - r;
-			if (node.value == "*") return l * r;
-			if (node.value == "%")
+			else if (node.value == "-") return l - r;
+			else if (node.value == "*") return l * r;
+			else if (node.value == "%")
 			{
 				if (r == 0)
 				{
@@ -680,7 +723,7 @@ Value interpreter::evalexpr(const NODE& node)
 				}
 				return l % r;
 			}
-			if (node.value == "/")
+			else if (node.value == "/")
 			{
 				if (r == 0)
 				{
