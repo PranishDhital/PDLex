@@ -149,10 +149,13 @@ NODE AST::parseprint(const std::vector<Token>& tokens, int& i)
 			i++;
 			continue;
 		}
-		else if (tokens[i].type == TOKENTYPE::EXCLAMATION || tokens[i].type == TOKENTYPE::COMMA)
+		else if (tokens[i].type == TOKENTYPE::PLUS)
 		{
 			i++;
 			continue;
+		}
+		else{
+			throw SyntaxError("Error",tokens[i].line,filename);
 		}
 		i++;
 	}

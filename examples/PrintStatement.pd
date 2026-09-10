@@ -1,0 +1,22 @@
+// Test file for the print statement keyword.
+
+print("==================== PRINT STATEMENT TESTS ====================");
+
+// Test 1: print a string literal.
+print("Test 1 PASSED - string literal");
+
+// Test 2: print values of every supported variable type.
+int count = 42;
+double ratio = 3.5;
+string name = "PDLex";
+bool enabled = true;
+print("Test 2 - values:" count ratio name enabled);
+
+// Test 3: print multiple arguments; they should be separated by spaces.
+print("Test 3 - multiple arguments:" "hello" "world" 123 false);
+
+// Test 4: print adds a newline after its output.
+print("Test 4 PASSED - this text is on its own line");
+print("Test 4 PASSED - so is this text");
+
+print("================== PRINT STATEMENT TESTS DONE ==================");
