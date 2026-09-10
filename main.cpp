@@ -8,11 +8,16 @@
 #include <vector>
 #include <string>
 
-bool pdExtension(const std::string &filename)
+bool hasPdExtension(const std::string &filename)
 {
     if (filename.size() < 3)
         return false;
     return filename.substr(filename.size() - 3) == ".pd";
+}
+
+std::string getVersion()
+{
+    return "v1.4.1";
 }
 
 void processTokens(const std::vector<Token> &tokens, AST &ast, interpreter &interp)
@@ -28,7 +33,7 @@ void processTokens(const std::vector<Token> &tokens, AST &ast, interpreter &inte
 int main(int argc, char **argv)
 {
     AST ast;
-    interpreter Interpert;
+    interpreter interp;
     lexer lex;
 
     if (argc < 2)
@@ -38,16 +43,22 @@ int main(int argc, char **argv)
     }
 
     std::string filename = argv[1];
-    if (!pdExtension(filename))
+    if (filename == "--version" || filename == "--v")
+    {
+        std::cout << getVersion() << "\n";
+        return 0;
+    }
+
+    if (!hasPdExtension(filename))
     {
         std::cerr << "Error! Only .pd files are supported\n";
         return 1;
     }
 
-    std::ifstream file(argv[1]);
+    std::ifstream file(filename);
     if (!file.is_open())
     {
-        std::cerr << "Could not open file: " << argv[1] << "\n";
+        std::cerr << "Could not open file: " << filename << "\n";
         return 1;
     }
 
@@ -65,7 +76,7 @@ int main(int argc, char **argv)
 
     try
     {
-        processTokens(tokens, ast, Interpert);
+        processTokens(tokens, ast, interp);
     }
     catch (const SyntaxError &e)
     {
