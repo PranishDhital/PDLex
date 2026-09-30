@@ -91,7 +91,7 @@ bool c = 7 != 9;
 Use `print(...)` to output values separated by spaces:
 
 ```pd
-print("Hello", name, count);
+print("Hello"+ name+ count);
 ```
 
 Use `printnl(...)` when you want the same style of output without a trailing newline:
