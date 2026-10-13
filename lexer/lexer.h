@@ -1,12 +1,9 @@
 #pragma once
 
-
 #include <istream>
 #include <string>
 
-
-enum class TOKENTYPE
-{
+enum class TOKENTYPE {
     NUMBER,
     SEMI,
     LPAREN,
@@ -44,24 +41,22 @@ enum class TOKENTYPE
     FOR,
     WHILE,
     PRINT_NL,
+    LET,
 
     END,
     UNDEFINED
 };
 
-struct Token
-{
+struct Token {
     TOKENTYPE type = TOKENTYPE::UNDEFINED;
     std::string value = "";
     int line = 1;
 };
 
-class lexer
-{
-public:
-    Token getnextToken(std::istream &file, int& line);
-    void print(const Token &tok);
+class lexer {
+   public:
+    Token getnextToken(std::istream& file, int& line);
+    void print(const Token& tok);
 
-private:
+   private:
 };
-

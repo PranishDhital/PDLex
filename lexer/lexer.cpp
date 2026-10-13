@@ -287,7 +287,11 @@ Token lexer::getnextToken(std::istream &file, int& line)
             file.unget();
         }
 
-        if (ident == "int")
+        if (ident == "let")
+        {
+            return { TOKENTYPE::LET, ident, line };
+        }
+        else if (ident == "int")
         {
             return { TOKENTYPE::INT, ident, line };
         }

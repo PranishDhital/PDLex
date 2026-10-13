@@ -1,72 +1,59 @@
-#include "lexer.h"
-#include "interpreter.h"
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
 #include "AST.h"
 #include "error/error.h"
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+#include "interpreter.h"
+#include "lexer.h"
 
 // returns true if filename has .pd
-bool hasPdExtension(const std::string &filename)
-{
-    if (filename.size() < 3)
-    {
+bool hasPdExtension(const std::string& filename) {
+    if (filename.size() < 3) {
         return false;
     }
     return filename.substr(filename.size() - 3) == ".pd";
 }
 
 // returns version
-std::string getVersion()
-{
-    return "ppi v1.4.1 ";
-}
+std::string getVersion() { return "ppi v1.4.2 "; }
 
-void processTokens(const std::vector<Token> &tokens, AST &ast, interpreter &interp)
-{
+void processTokens(const std::vector<Token>& tokens, AST& ast, interpreter& interp) {
     int i = 0;
-    while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::END)
-    {
+    while (i < static_cast<int>(tokens.size()) && tokens[i].type != TOKENTYPE::END) {
         NODE tree = ast.parseStatement(tokens, i);
         interp.interpret(tree);
     }
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char** argv) {
     AST ast;
     interpreter interp;
     lexer lex;
 
-    if (argc >= 2)
-    {
+    if (argc >= 2) {
         std::string arg = argv[1];
-        if (arg == "--version" || arg == "--v" || arg == "--V" || arg == "--Version")
-        {
+        if (arg == "--version" || arg == "--v" || arg == "--V" || arg == "--Version") {
             std::cout << getVersion() << "\n";
             return 0;
         }
     }
 
-    if (argc < 2)
-    {
+    if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <filename>.pd\n";
         return 1;
     }
 
     std::string filename = argv[1];
 
-    if (!hasPdExtension(filename))
-    {
+    if (!hasPdExtension(filename)) {
         std::cerr << "Error! Only .pd files are supported\n";
         return 1;
     }
 
     std::ifstream file(filename);
-    if (!file.is_open())
-    {
+    if (!file.is_open()) {
         std::cerr << "Could not open file: " << filename << "\n";
         return 1;
     }
@@ -77,28 +64,20 @@ int main(int argc, char **argv)
     std::vector<Token> tokens;
     int line = 1;
 
-    do
-    {
+    do {
         tok = lex.getnextToken(file, line);
         tokens.push_back(tok);
     } while (tok.type != TOKENTYPE::END);
 
-    try
-    {
+    try {
         processTokens(tokens, ast, interp);
-    }
-    catch (const SyntaxError &e)
-    {
+    } catch (const SyntaxError& e) {
         std::cerr << e.getFormattedMessage() << "\n";
         return 1;
-    }
-    catch (const RuntimeError &e)
-    {
+    } catch (const RuntimeError& e) {
         std::cerr << e.getFormattedMessage() << "\n";
         return 1;
-    }
-    catch (const std::exception &e)
-    {
+    } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;
     }

@@ -223,6 +223,11 @@ void interpreter::interpret(const NODE &node)
 			declaredType = "double";
 			value = 0.0;
 		}
+		else if (!node.child.empty() && node.child[0].value == "let")
+		{
+			declaredType = "let";
+			value = 0;
+		}
 		else if (!node.child.empty() && node.child[0].value == "bool")
 		{
 			declaredType = "bool";
@@ -290,6 +295,11 @@ void interpreter::interpret(const NODE &node)
 				}
 			}
 
+			if (declaredType == "let" && !is_int(value) && !is_double(value))
+			{
+				throw RuntimeError("let variables only accept int or double values", node.line);
+			}
+
 			variables[node.value] = value;
 			return;
 		}
@@ -314,7 +324,18 @@ void interpreter::interpret(const NODE &node)
 		const Value rhs = evalexpr(node.child[0]);
 		const std::string varType = has_key(variable_types, node.value) ? variable_types[node.value] : "int";
 
-		if (varType == "string")
+		if (varType == "let")
+		{
+			if (is_int(rhs) || is_double(rhs))
+			{
+				variables[node.value] = rhs;
+			}
+			else
+			{
+				throw RuntimeError("let variables only accept int or double values", node.line);
+			}
+		}
+		else if (varType == "string")
 		{
 			variables[node.value] = to_string(rhs);
 		}
@@ -484,6 +505,23 @@ void interpreter::interpret(const NODE &node)
 				catch (const std::exception &)
 				{
 					errors::runtimeError("cannot convert '" + input + "' to int", node.line);
+					return;
+				}
+			}
+			else if (varType == "let")
+			{
+				try
+				{
+					size_t parsed = 0;
+					const int integerValue = std::stoi(input, &parsed);
+					if (parsed == input.size())
+						variables[node.value] = integerValue;
+					else
+						variables[node.value] = std::stod(input);
+				}
+				catch (const std::exception &)
+				{
+					errors::runtimeError("cannot convert '" + input + "' to int or double", node.line);
 					return;
 				}
 			}

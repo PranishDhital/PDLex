@@ -156,7 +156,7 @@ NODE AST::parseVar(const std::vector<Token>& tokens, int& i) {
         return node;
     }
 
-    if (tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE &&
+    if (tokens[i].type != TOKENTYPE::LET && tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE &&
         tokens[i].type != TOKENTYPE::STRING && tokens[i].type != TOKENTYPE::BOOLEAN) {
         return node;
     }
@@ -696,7 +696,7 @@ NODE AST::parseStatement(const std::vector<Token>& tokens, int& i) {
         i++;
         return node;
     }
-    if (tokens[i].type == TOKENTYPE::INT || tokens[i].type == TOKENTYPE::DOUBLE ||
+    if (tokens[i].type == TOKENTYPE::LET || tokens[i].type == TOKENTYPE::INT || tokens[i].type == TOKENTYPE::DOUBLE ||
         tokens[i].type == TOKENTYPE::STRING || tokens[i].type == TOKENTYPE::BOOLEAN) {
         return parseVar(tokens, i);
     } else if (tokens[i].type == TOKENTYPE::PRINT) {
@@ -790,7 +790,7 @@ NODE AST::ns_parseVar(const std::vector<Token>& tokens, int& i) {
         return node;
     }
 
-    if (tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE) {
+    if (tokens[i].type != TOKENTYPE::LET && tokens[i].type != TOKENTYPE::INT && tokens[i].type != TOKENTYPE::DOUBLE) {
         return node;
     }
 
