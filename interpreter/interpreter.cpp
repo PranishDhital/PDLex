@@ -9,15 +9,15 @@
 using Value = std::variant<std::string, int, double, bool>;
 
 template <typename Map, typename Key>
-static bool has_key(const Map& map, const Key& key)
+static bool has_key(const Map &map, const Key &key)
 {
 	return map.find(key) != map.end();
 }
 
-static int to_int(const Value& value)
+static int to_int(const Value &value)
 {
 	return std::visit(
-		[](const auto& v) -> int
+		[](const auto &v) -> int
 		{
 			using T = std::decay_t<decltype(v)>;
 			if constexpr (std::is_same_v<T, int>)
@@ -38,11 +38,11 @@ static int to_int(const Value& value)
 				{
 					return std::stoi(v);
 				}
-				catch (const std::invalid_argument&)
+				catch (const std::invalid_argument &)
 				{
 					throw std::runtime_error("cannot convert string \"" + v + "\" to integer");
 				}
-				catch (const std::out_of_range&)
+				catch (const std::out_of_range &)
 				{
 					throw std::runtime_error("integer conversion out of range for \"" + v + "\"");
 				}
@@ -55,10 +55,10 @@ static int to_int(const Value& value)
 		value);
 }
 
-static double to_double(const Value& value)
+static double to_double(const Value &value)
 {
 	return std::visit(
-		[](const auto& v) -> double
+		[](const auto &v) -> double
 		{
 			using T = std::decay_t<decltype(v)>;
 			if constexpr (std::is_same_v<T, double>)
@@ -79,11 +79,11 @@ static double to_double(const Value& value)
 				{
 					return std::stod(v);
 				}
-				catch (const std::invalid_argument&)
+				catch (const std::invalid_argument &)
 				{
 					throw std::runtime_error("cannot convert string \"" + v + "\" to double");
 				}
-				catch (const std::out_of_range&)
+				catch (const std::out_of_range &)
 				{
 					throw std::runtime_error("double conversion out of range for \"" + v + "\"");
 				}
@@ -96,10 +96,10 @@ static double to_double(const Value& value)
 		value);
 }
 
-static std::string to_string(const Value& value)
+static std::string to_string(const Value &value)
 {
 	return std::visit(
-		[](const auto& v) -> std::string
+		[](const auto &v) -> std::string
 		{
 			using T = std::decay_t<decltype(v)>;
 			if constexpr (std::is_same_v<T, std::string>)
@@ -122,25 +122,25 @@ static std::string to_string(const Value& value)
 		value);
 }
 
-static bool is_double(const Value& v)
+static bool is_double(const Value &v)
 {
 	return std::holds_alternative<double>(v);
 }
 
-static bool is_int(const Value& v)
+static bool is_int(const Value &v)
 {
 	return std::holds_alternative<int>(v);
 }
 
-static bool is_string(const Value& v)
+static bool is_string(const Value &v)
 {
 	return std::holds_alternative<std::string>(v);
 }
 
-static bool to_bool(const Value& value)
+static bool to_bool(const Value &value)
 {
 	return std::visit(
-		[](const auto& v) -> bool
+		[](const auto &v) -> bool
 		{
 			using T = std::decay_t<decltype(v)>;
 			if constexpr (std::is_same_v<T, bool>)
@@ -168,7 +168,7 @@ static bool to_bool(const Value& value)
 }
 
 // Helper function to evaluate any node to a Value
-Value interpreter::evaluateNode(const NODE& node)
+Value interpreter::evaluateNode(const NODE &node)
 {
 	switch (node.nodetype)
 	{
@@ -177,15 +177,14 @@ Value interpreter::evaluateNode(const NODE& node)
 		{
 			throw RuntimeError(
 				"undefined variable '" + node.value + "'",
-				node.line
-			);
+				node.line);
 		}
 		return variables[node.value];
 
 	case NODETYPE::NUMBER_LITERAL:
 		return (node.value.find('.') != std::string::npos)
-			? Value(std::stod(node.value))
-			: Value(std::stoi(node.value));
+				   ? Value(std::stod(node.value))
+				   : Value(std::stoi(node.value));
 
 	case NODETYPE::STRING_LITERAL:
 		return node.value;
@@ -203,19 +202,18 @@ Value interpreter::evaluateNode(const NODE& node)
 	}
 }
 
-
-void interpreter::interpret(const NODE& node)
+void interpreter::interpret(const NODE &node)
 {
 	if (node.nodetype == NODETYPE::VARIABLE_DECLARATION)
 	{
 		// Get the declared type from child[0]
-		std::string declaredType = "int";  // default
+		std::string declaredType = "int"; // default
 		Value value = 0;
 
 		if (!node.child.empty() && node.child[0].value == "string")
 		{
 			declaredType = "string";
-			value = std::string("");  // Initialize strings to empty
+			value = std::string(""); // Initialize strings to empty
 		}
 		else if (!node.child.empty() && node.child[0].value == "double")
 		{
@@ -240,7 +238,7 @@ void interpreter::interpret(const NODE& node)
 		// if it will be at child[1] now (child[0] is the type)
 		if (node.child.size() > 1)
 		{
-			if (const NODE& rhs = node.child[1]; rhs.nodetype == NODETYPE::NUMBER_LITERAL)
+			if (const NODE &rhs = node.child[1]; rhs.nodetype == NODETYPE::NUMBER_LITERAL)
 			{
 				if (rhs.value.find('.') != std::string::npos)
 				{
@@ -332,36 +330,36 @@ void interpreter::interpret(const NODE& node)
 
 		return;
 	}
-	else if (node.nodetype == NODETYPE::IF_STATEMENT) 
+	else if (node.nodetype == NODETYPE::IF_STATEMENT)
 	{
 		Value condResult = evalexpr(node.child[0]);
 		bool cond = to_bool(condResult);
 
 		if (cond)
 		{
-			for (auto& statement : node.child[1].child)
+			for (auto &statement : node.child[1].child)
 			{
 				interpret(statement);
 			}
-		}	/// this i s just the if condition
+		} /// this i s just the if condition
 		else if (node.child.size() > 2)
-		{ 
+		{
 			if (node.child[2].nodetype == NODETYPE::IF_STATEMENT)
 			{
-				interpret(node.child[2]);		
-			}					/// the else if block 
+				interpret(node.child[2]);
+			} /// the else if block
 			else
 			{
-				for (auto& statement : node.child[2].child)
+				for (auto &statement : node.child[2].child)
 				{
 					interpret(statement);
 				}
-			} /// the else block 
-			}
-			return;
+			} /// the else block
+		}
+		return;
 	}
 	else if (node.nodetype == NODETYPE::POSTFIX_INCREMENT ||
-		node.nodetype == NODETYPE::POSTFIX_DECREMENT)
+			 node.nodetype == NODETYPE::POSTFIX_DECREMENT)
 	{
 		// execute standalone i++ or i-- statements so they mutate the variable
 		evalexpr(node);
@@ -379,7 +377,7 @@ void interpreter::interpret(const NODE& node)
 
 		while (to_bool(evalexpr(node.child[1])))
 		{
-			for (auto& statement : node.child[3].child)
+			for (auto &statement : node.child[3].child)
 			{
 				interpret(statement);
 			}
@@ -391,7 +389,7 @@ void interpreter::interpret(const NODE& node)
 	}
 	else if (node.nodetype == NODETYPE::WHILE_LOOP)
 	{
-		if(node.child.size() < 2)
+		if (node.child.size() < 2)
 		{
 			throw RuntimeError("malformed while loop", node.line);
 		}
@@ -400,7 +398,7 @@ void interpreter::interpret(const NODE& node)
 		while (to_bool(evalexpr(node.child[0])))
 		{
 			// execute body
-			for (auto& statement : node.child[1].child)
+			for (auto &statement : node.child[1].child)
 			{
 				interpret(statement);
 			}
@@ -413,12 +411,12 @@ void interpreter::interpret(const NODE& node)
 	{
 		for (size_t i = 0; i < node.child.size(); i++)
 		{
-			const NODE& arg = node.child[i];
+			const NODE &arg = node.child[i];
 			Value result = evaluateNode(arg);
 
-			std::visit([](const auto& v)
-				{ std::cout << v; },
-				result);
+			std::visit([](const auto &v)
+					   { std::cout << v; },
+					   result);
 
 			if (i + 1 < node.child.size())
 			{
@@ -431,12 +429,12 @@ void interpreter::interpret(const NODE& node)
 	{
 		for (size_t i = 0; i < node.child.size(); i++)
 		{
-			const NODE& arg = node.child[i];
+			const NODE &arg = node.child[i];
 			Value result = evaluateNode(arg);
 
-			std::visit([](const auto& v)
-				{ std::cout << v; },
-				result);
+			std::visit([](const auto &v)
+					   { std::cout << v; },
+					   result);
 
 			if (i + 1 < node.child.size())
 			{
@@ -451,9 +449,9 @@ void interpreter::interpret(const NODE& node)
 		if (!node.child.empty())
 		{
 			Value prompt = evaluateNode(node.child[0]);
-			std::visit([](const auto& v)
-				{ std::cout << v; },
-				prompt);
+			std::visit([](const auto &v)
+					   { std::cout << v; },
+					   prompt);
 		}
 
 		std::cout.flush();
@@ -466,7 +464,7 @@ void interpreter::interpret(const NODE& node)
 		if (!node.value.empty())
 		{
 			// Convert the input based on the declared type of the variable
-			std::string varType = "string";  // default
+			std::string varType = "string"; // default
 			if (has_key(variable_types, node.value))
 			{
 				varType = variable_types[node.value];
@@ -478,7 +476,7 @@ void interpreter::interpret(const NODE& node)
 				{
 					variables[node.value] = std::stoi(input);
 				}
-				catch (const std::exception&)
+				catch (const std::exception &)
 				{
 					errors::runtimeError("cannot convert '" + input + "' to int", node.line);
 					return;
@@ -490,7 +488,7 @@ void interpreter::interpret(const NODE& node)
 				{
 					variables[node.value] = std::stod(input);
 				}
-				catch (const std::exception&)
+				catch (const std::exception &)
 				{
 					errors::runtimeError("cannot convert '" + input + "' to double", node.line);
 					return;
@@ -511,7 +509,7 @@ void interpreter::interpret(const NODE& node)
 					throw RuntimeError("cannot convert '" + input + "' to bool", node.line);
 				}
 			}
-			else  // string
+			else // string
 			{
 				variables[node.value] = input;
 			}
@@ -520,7 +518,7 @@ void interpreter::interpret(const NODE& node)
 	}
 }
 
-Value interpreter::evalexpr(const NODE& node)
+Value interpreter::evalexpr(const NODE &node)
 {
 	switch (node.nodetype)
 	{
@@ -532,7 +530,7 @@ Value interpreter::evalexpr(const NODE& node)
 				return std::stod(node.value);
 			return std::stoi(node.value);
 		}
-		catch (const std::exception& e)
+		catch (const std::exception &e)
 		{
 			throw RuntimeError(std::string("numeric literal error: ") + e.what(), node.line);
 		}
@@ -544,7 +542,7 @@ Value interpreter::evalexpr(const NODE& node)
 		{
 			return std::stod(node.value);
 		}
-		catch (const std::exception& e)
+		catch (const std::exception &e)
 		{
 			throw RuntimeError(std::string("double literal error: ") + e.what(), node.line);
 		}
@@ -634,7 +632,7 @@ Value interpreter::evalexpr(const NODE& node)
 		}
 
 		// Comparison operators return int (0 for false, 1 for true)
-		// gonna wite the if conditons in the same line cause it better to look at
+		// gonna wite the if conditions in the same line cause it better to look at
 		if (node.value == "==" || node.value == "!=" || node.value == "<" ||
 			node.value == ">" || node.value == "<=" || node.value == ">=")
 		{
@@ -644,12 +642,18 @@ Value interpreter::evalexpr(const NODE& node)
 				const double l = to_double(left);
 				const double r = to_double(right);
 
-				if (node.value == "==") return (l == r) ? 1 : 0;
-				else if (node.value == "!=") return (l != r) ? 1 : 0;
-				else if (node.value == "<")  return (l < r) ? 1 : 0;
-				else if (node.value == ">")  return (l > r) ? 1 : 0;
-				else if (node.value == "<=") return (l <= r) ? 1 : 0;
-				else if (node.value == ">=") return (l >= r) ? 1 : 0;
+				if (node.value == "==")
+					return (l == r) ? 1 : 0;
+				else if (node.value == "!=")
+					return (l != r) ? 1 : 0;
+				else if (node.value == "<")
+					return (l < r) ? 1 : 0;
+				else if (node.value == ">")
+					return (l > r) ? 1 : 0;
+				else if (node.value == "<=")
+					return (l <= r) ? 1 : 0;
+				else if (node.value == ">=")
+					return (l >= r) ? 1 : 0;
 			}
 			else
 			{
@@ -657,12 +661,18 @@ Value interpreter::evalexpr(const NODE& node)
 				const std::string l = to_string(left);
 				const std::string r = to_string(right);
 
-				if (node.value == "==") return (l == r) ? 1 : 0;
-				else if (node.value == "!=") return (l != r) ? 1 : 0;
-				else if (node.value == "<")  return (l < r) ? 1 : 0;
-				else if (node.value == ">")  return (l > r) ? 1 : 0;
-				else if (node.value == "<=") return (l <= r) ? 1 : 0;
-				else if (node.value == ">=") return (l >= r) ? 1 : 0;
+				if (node.value == "==")
+					return (l == r) ? 1 : 0;
+				else if (node.value == "!=")
+					return (l != r) ? 1 : 0;
+				else if (node.value == "<")
+					return (l < r) ? 1 : 0;
+				else if (node.value == ">")
+					return (l > r) ? 1 : 0;
+				else if (node.value == "<=")
+					return (l <= r) ? 1 : 0;
+				else if (node.value == ">=")
+					return (l >= r) ? 1 : 0;
 			}
 		}
 
@@ -673,9 +683,12 @@ Value interpreter::evalexpr(const NODE& node)
 				const double l = to_double(left);
 				const double r = to_double(right);
 
-				if (node.value == "+") return l + r;
-				else if (node.value == "-") return l - r;
-				else if (node.value == "*") return l * r;
+				if (node.value == "+")
+					return l + r;
+				else if (node.value == "-")
+					return l - r;
+				else if (node.value == "*")
+					return l * r;
 				else if (node.value == "/")
 				{
 					if (r == 0.0)
@@ -698,7 +711,7 @@ Value interpreter::evalexpr(const NODE& node)
 				errors::runtimeError("unknown operator '" + node.value + "'", node.line);
 				return 0.0;
 			}
-			catch (const std::exception& e)
+			catch (const std::exception &e)
 			{
 				errors::runtimeError(std::string("type conversion error in expression: ") + e.what(), node.line);
 				return 0.0;
@@ -711,9 +724,12 @@ Value interpreter::evalexpr(const NODE& node)
 			const int l = to_int(left);
 			const int r = to_int(right);
 
-			if (node.value == "+") return l + r;
-			else if (node.value == "-") return l - r;
-			else if (node.value == "*") return l * r;
+			if (node.value == "+")
+				return l + r;
+			else if (node.value == "-")
+				return l - r;
+			else if (node.value == "*")
+				return l * r;
 			else if (node.value == "%")
 			{
 				if (r == 0)
@@ -735,7 +751,7 @@ Value interpreter::evalexpr(const NODE& node)
 			errors::runtimeError("unknown operator '" + node.value + "'", node.line);
 			return 0;
 		}
-		catch (const std::exception& e)
+		catch (const std::exception &e)
 		{
 			errors::runtimeError(std::string("type conversion error in expression: ") + e.what(), node.line);
 			return 0;

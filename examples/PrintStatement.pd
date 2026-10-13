@@ -19,4 +19,14 @@ print("Test 3 - multiple arguments:" "hello" "world" 123 false);
 print("Test 4 PASSED - this text is on its own line");
 print("Test 4 PASSED - so is this text");
 
+// Test 5: printnl keeps consecutive output on the same line.
+printnl("Test 5 PASSED - printnl output:");
+printnl("first");
+printnl("second");
+print("");
+
+// Test 6: printnl supports multiple arguments and all variable types.
+print("Test 6 PASSED - values:" count , ratio , name , enabled);
+print("");
+
 print("================== PRINT STATEMENT TESTS DONE ==================");

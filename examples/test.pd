@@ -6,7 +6,7 @@
     This is a multi line comment
 */
 
-// Simple program to display the language 
+// Simple program to display the language
 
 string continue = "yes";
 
@@ -16,7 +16,7 @@ while (continue == "yes")
     string line = " -------------------------- ";
     string checkHuman;
     int age = 0;
-    double weight = 0; 
+    double weight = 0;
     bool human = true;
 
     input ("Enter your full name : ", name);
@@ -36,22 +36,22 @@ while (continue == "yes")
     {
         print ("Age group : Child");
     }
-    else 
+    else
     {
         print ("Age group : Adult");
     }
 
     // check human
     if (checkHuman == "yes")
-    {print ("Species : Human");} 
+    {print ("Species : Human");}
     else {print ("Species : not human");}
 
     print (line);
 
-    for (int i = 0, i <= 5, i++)
+    for (int i = 0; i <= 5; i++)
     {
         printnl (i);        // printnl -- prints with no new line , prints in the same line
     }
     printnl ("\n");
-    input ("do you wanna do it again (yes/no)? :", continue); 
+    input ("do you wanna do it again (yes/no)? :", continue);
 }

@@ -8,16 +8,20 @@
 #include <vector>
 #include <string>
 
+// returns true if filename has .pd
 bool hasPdExtension(const std::string &filename)
 {
     if (filename.size() < 3)
+    {
         return false;
+    }
     return filename.substr(filename.size() - 3) == ".pd";
 }
 
+// returns version
 std::string getVersion()
 {
-    return "v1.4.1";
+    return "ppi v1.4.1 ";
 }
 
 void processTokens(const std::vector<Token> &tokens, AST &ast, interpreter &interp)
@@ -36,6 +40,16 @@ int main(int argc, char **argv)
     interpreter interp;
     lexer lex;
 
+    if (argc >= 2)
+    {
+        std::string arg = argv[1];
+        if (arg == "--version" || arg == "--v" || arg == "--V" || arg == "--Version")
+        {
+            std::cout << getVersion() << "\n";
+            return 0;
+        }
+    }
+
     if (argc < 2)
     {
         std::cerr << "Usage: " << argv[0] << " <filename>.pd\n";
@@ -43,11 +57,6 @@ int main(int argc, char **argv)
     }
 
     std::string filename = argv[1];
-    if (filename == "--version" || filename == "--v")
-    {
-        std::cout << getVersion() << "\n";
-        return 0;
-    }
 
     if (!hasPdExtension(filename))
     {
