@@ -13,7 +13,7 @@ bool enabled = true;
 print("Test 2 - values:" count ratio name enabled);
 
 // Test 3: print multiple arguments; they should be separated by spaces.
-print("Test 3 - multiple arguments:" "hello" "world" 123 false);
+print("Test 3 - multiple arguments:" + "hello" + "world" + 123 + false);
 
 // Test 4: print adds a newline after its output.
 print("Test 4 PASSED - this text is on its own line");
