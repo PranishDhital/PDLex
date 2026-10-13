@@ -167,10 +167,10 @@ else
 
 ### Loops
 
-`for` loops use three comma-separated parts inside the parentheses:
+`for` loops use three semicolon-separated parts inside the parentheses:
 
 ```pd
-for (int i = 0, i < 5, i++)
+for (int i = 0; i < 5; i++)
 {
     print(i);
 }
@@ -179,7 +179,7 @@ for (int i = 0, i < 5, i++)
 General form:
 
 ```pd
-for (declaration, condition, update)
+for (declaration; condition; update)
 {
     statements
 }

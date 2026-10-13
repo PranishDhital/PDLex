@@ -803,6 +803,11 @@ Value interpreter::evalexpr(const NODE &node)
 		}
 	}
 
+	case NODETYPE::LOGICAL_NOT:
+		if (node.child.empty())
+			throw RuntimeError("logical negation requires an expression", node.line);
+		return to_bool(evalexpr(node.child[0])) ? 0 : 1;
+
 	default:
 		errors::runtimeError("unexpected node in expression", node.line);
 		return 0;

@@ -199,6 +199,25 @@ NODE AST::parseVar(const std::vector<Token>& tokens, int& i) {
 NODE AST::parsePrimary(const std::vector<Token>& tokens, int& i) {
     NODE node;
 
+    if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::LPAREN) {
+        const int line = tokens[i].line;
+        i++;
+        node = parseExpr(tokens, i);
+        if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::RPAREN) {
+            throw SyntaxError("Expected ')' after expression",
+                              i < static_cast<int>(tokens.size()) ? tokens[i].line : line,
+                              filename);
+        }
+        i++;
+        return node;
+    }
+
+    if (i >= static_cast<int>(tokens.size())) {
+        throw SyntaxError("Unexpected end of expression",
+                          tokens.empty() ? 1 : tokens.back().line,
+                          filename);
+    }
+
     if (tokens[i].type == TOKENTYPE::NUMBER) {
         node.nodetype = NODETYPE::NUMBER_LITERAL;
         node.value = tokens[i].value;
@@ -432,6 +451,17 @@ NODE AST::parseTerm(const std::vector<Token>& tokens, int& i) {
 }
 
 NODE AST::parseUnary(const std::vector<Token>& tokens, int& i) {
+    if (i < static_cast<int>(tokens.size()) && tokens[i].type == TOKENTYPE::EXCLAMATION) {
+        const int line = tokens[i].line;
+        i++;
+        NODE operand = parseUnary(tokens, i);
+        NODE node;
+        node.nodetype = NODETYPE::LOGICAL_NOT;
+        node.line = line;
+        node.child.push_back(operand);
+        return node;
+    }
+
     if (i < static_cast<int>(tokens.size()) && (tokens[i].type == TOKENTYPE::INCREMENT || tokens[i].type == TOKENTYPE::DECREMENT)) {
         const TOKENTYPE op = tokens[i].type; const int line = tokens[i].line; i++;
         if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::IDENT) throw SyntaxError("Expected variable name after prefix increment/decrement", line, filename);
@@ -743,14 +773,14 @@ NODE AST::parseForLoop(const std::vector<Token>& tokens, int& i) {
 
     node.child.push_back(ns_parseVar(tokens, i));
 
-    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA) {
-        throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
+    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI) {
+        throw SyntaxError("Expected ';' after variable declaration", tokens[i].line, filename);
     }
     i++;
 
     node.child.push_back(parseComparison(tokens, i));
-    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA) {
-        throw SyntaxError("Expected ',' after loop condition", tokens[i].line, filename);
+    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI) {
+        throw SyntaxError("Expected ';' after loop condition", tokens[i].line, filename);
     }
     i++;
 
