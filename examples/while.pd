@@ -3,7 +3,7 @@ int i = 0;
 
 while (running == true)
 {
-	print("while loop iteration", i, running);
+	printnl("while loop iteration", i, running);
 	i++;
 
 	if (i >= 5)
@@ -12,4 +12,4 @@ while (running == true)
 	}
 }
 
-print("done", i, running);
+printnl("done", i, running);

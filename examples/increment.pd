@@ -1,0 +1,13 @@
+// Prefix and postfix increment/decrement also work as standalone statements.
+int i = 1;
+i++;
+printnl(i); // 2
+
+++i;
+printnl(i); // 3
+
+i--;
+printnl(i); // 2
+
+--i;
+printnl(i); // 1

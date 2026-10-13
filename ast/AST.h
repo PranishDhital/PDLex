@@ -17,6 +17,8 @@ enum class NODETYPE
 	BINARY_OP,
 	POSTFIX_INCREMENT,
 	POSTFIX_DECREMENT,
+	PREFIX_INCREMENT,
+	PREFIX_DECREMENT,
 	PRINT_STATEMENT,
 	VARIABLE_DECLARATION,
 	ASSIGNMENT,
@@ -121,7 +123,7 @@ public:
 	NODE parseWhileLoop(const std::vector<Token> &tokens, int &i);
 
 	/**
-	 * Parses the print statement that does not append a newline.
+	 * Parses the print statement that appends a newline.
 	 */
 	NODE parseprintNL(const std::vector<Token> &tokens, int &i);
 	/**

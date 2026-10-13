@@ -322,6 +322,20 @@ NODE AST::parseForUpdate(const std::vector<Token>& tokens, int& i) {
         throw SyntaxError("Expected loop update expression", tokens.back().line, filename);
     }
 
+    if (tokens[i].type == TOKENTYPE::INCREMENT || tokens[i].type == TOKENTYPE::DECREMENT) {
+        const TOKENTYPE op = tokens[i].type;
+        const int line = tokens[i].line;
+        i++;
+        if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::IDENT)
+            throw SyntaxError("Expected variable name after prefix increment/decrement", line, filename);
+        NODE node;
+        node.nodetype = op == TOKENTYPE::INCREMENT ? NODETYPE::PREFIX_INCREMENT : NODETYPE::PREFIX_DECREMENT;
+        node.value = tokens[i].value;
+        node.line = line;
+        i++;
+        return node;
+    }
+
     if (tokens[i].type != TOKENTYPE::IDENT) {
         throw SyntaxError("Expected variable name in for-loop update", tokens[i].line, filename);
     }
@@ -418,6 +432,11 @@ NODE AST::parseTerm(const std::vector<Token>& tokens, int& i) {
 }
 
 NODE AST::parseUnary(const std::vector<Token>& tokens, int& i) {
+    if (i < static_cast<int>(tokens.size()) && (tokens[i].type == TOKENTYPE::INCREMENT || tokens[i].type == TOKENTYPE::DECREMENT)) {
+        const TOKENTYPE op = tokens[i].type; const int line = tokens[i].line; i++;
+        if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::IDENT) throw SyntaxError("Expected variable name after prefix increment/decrement", line, filename);
+        NODE n; n.nodetype = op == TOKENTYPE::INCREMENT ? NODETYPE::PREFIX_INCREMENT : NODETYPE::PREFIX_DECREMENT; n.value = tokens[i].value; n.line = line; i++; return n;
+    }
     if (i < static_cast<int>(tokens.size()) &&
         (tokens[i].type == TOKENTYPE::MINUS || tokens[i].type == TOKENTYPE::PLUS)) {
         const TOKENTYPE opType = tokens[i].type;
@@ -669,6 +688,14 @@ NODE AST::parseIfStatement(const std::vector<Token>& tokens, int& i) {
 }
 
 NODE AST::parseStatement(const std::vector<Token>& tokens, int& i) {
+    if (tokens[i].type == TOKENTYPE::INCREMENT || tokens[i].type == TOKENTYPE::DECREMENT) {
+        NODE node = parseForUpdate(tokens, i);
+        if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI)
+            throw SyntaxError("Expected ';' after increment/decrement expression",
+                              i < static_cast<int>(tokens.size()) ? tokens[i].line : node.line, filename);
+        i++;
+        return node;
+    }
     if (tokens[i].type == TOKENTYPE::INT || tokens[i].type == TOKENTYPE::DOUBLE ||
         tokens[i].type == TOKENTYPE::STRING || tokens[i].type == TOKENTYPE::BOOLEAN) {
         return parseVar(tokens, i);
@@ -716,14 +743,14 @@ NODE AST::parseForLoop(const std::vector<Token>& tokens, int& i) {
 
     node.child.push_back(ns_parseVar(tokens, i));
 
-    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI) {
-        throw SyntaxError("Expected ';' after variable declaration", tokens[i].line, filename);
+    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA) {
+        throw SyntaxError("Expected ',' after variable declaration", tokens[i].line, filename);
     }
     i++;
 
     node.child.push_back(parseComparison(tokens, i));
-    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::SEMI) {
-        throw SyntaxError("Expected ';' after variable declaration", tokens[i].line, filename);
+    if (i >= static_cast<int>(tokens.size()) || tokens[i].type != TOKENTYPE::COMMA) {
+        throw SyntaxError("Expected ',' after loop condition", tokens[i].line, filename);
     }
     i++;
 

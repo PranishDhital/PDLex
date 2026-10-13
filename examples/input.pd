@@ -7,4 +7,4 @@ input ("FirstName : ", first_name);
 input ("LastName : ", last_name);
 input ("Age : ", age);
 
-print ("Hi" + first_name +  last_name + ",you are " + age +  "years old.");
+printnl ("Hi" + first_name +  last_name + ",you are " + age +  "years old.");

@@ -88,13 +88,13 @@ bool c = 7 != 9;
 
 ## Printing
 
-Use `print(...)` to output values separated by spaces:
+Use `print(...)` to output values separated by spaces without a trailing newline:
 
 ```pd
 print("Hello"+ name+ count);
 ```
 
-Use `printnl(...)` when you want the same style of output without a trailing newline:
+Use `printnl(...)` when you want the same style of output with a trailing newline:
 
 ```pd
 printnl("Loading");
@@ -113,6 +113,12 @@ Supported forms:
 input(name);
 input("Enter your name: ", name);
 input("Enter age: ", age);
+```
+
+For compatibility with PPC
+
+```
+input(name);
 ```
 
 ## If Statements

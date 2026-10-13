@@ -196,6 +196,9 @@ Value interpreter::evaluateNode(const NODE &node)
 		return evalexpr(node);
 	case NODETYPE::POSTFIX_DECREMENT:
 		return evalexpr(node);
+	case NODETYPE::PREFIX_INCREMENT:
+	case NODETYPE::PREFIX_DECREMENT:
+		return evalexpr(node);
 
 	default:
 		return node.value;
@@ -359,7 +362,9 @@ void interpreter::interpret(const NODE &node)
 		return;
 	}
 	else if (node.nodetype == NODETYPE::POSTFIX_INCREMENT ||
-			 node.nodetype == NODETYPE::POSTFIX_DECREMENT)
+			 node.nodetype == NODETYPE::POSTFIX_DECREMENT ||
+			 node.nodetype == NODETYPE::PREFIX_INCREMENT ||
+			 node.nodetype == NODETYPE::PREFIX_DECREMENT)
 	{
 		// execute standalone i++ or i-- statements so they mutate the variable
 		evalexpr(node);
@@ -423,7 +428,6 @@ void interpreter::interpret(const NODE &node)
 				std::cout << " ";
 			}
 		}
-		std::cout << "\n";
 	}
 	else if (node.nodetype == NODETYPE::PRINT_NL_STATEMENT)
 	{
@@ -441,6 +445,7 @@ void interpreter::interpret(const NODE &node)
 				std::cout << " ";
 			}
 		}
+		std::cout << "\n";
 	}
 
 	else if (node.nodetype == NODETYPE::INPUT_EXPRESSION)
@@ -564,6 +569,7 @@ Value interpreter::evalexpr(const NODE &node)
 	}
 
 	case NODETYPE::POSTFIX_INCREMENT:
+	case NODETYPE::PREFIX_INCREMENT:
 	{
 		if (node.value.empty())
 		{
@@ -589,9 +595,10 @@ Value interpreter::evalexpr(const NODE &node)
 			throw RuntimeError("increment only works on int or double variables", node.line);
 		}
 
-		return current;
+		return node.nodetype == NODETYPE::PREFIX_INCREMENT ? variables[node.value] : current;
 	}
 	case NODETYPE::POSTFIX_DECREMENT:
+	case NODETYPE::PREFIX_DECREMENT:
 	{
 		if (node.value.empty())
 		{
@@ -617,7 +624,7 @@ Value interpreter::evalexpr(const NODE &node)
 			throw RuntimeError("decrement only works on int or double variables", node.line);
 		}
 
-		return current;
+		return node.nodetype == NODETYPE::PREFIX_DECREMENT ? variables[node.value] : current;
 	}
 
 	case NODETYPE::BINARY_OP:

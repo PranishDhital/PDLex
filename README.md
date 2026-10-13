@@ -19,7 +19,7 @@ PDLex currently supports:
 - `for` loops
 - `while` loops
 - Basic arithmetic, comparison, and equality expressions
-- Postfix increment and decrement with `++` and `--`
+- Prefix and postfix increment and decrement with `++` and `--`
 
 ## Language Support
 
@@ -68,11 +68,13 @@ name = "new value";
 ready = false;
 ```
 
-Postfix increment and decrement are also supported:
+Prefix and postfix increment and decrement are supported:
 
 ```pd
 count++;
 count--;
+++count;
+--count;
 ```
 
 ### Expressions
@@ -94,13 +96,13 @@ Operator precedence is:
 
 ### Printing
 
-Use `print(...)` to output values separated by spaces:
+Use `print(...)` to output values separated by spaces without a trailing newline:
 
 ```pd
 print("Hello", name, count);
 ```
 
-Use `printnl(...)` for the same style of output without a trailing newline:
+Use `printnl(...)` for the same style of output with a trailing newline:
 
 ```pd
 printnl("Loading");
@@ -183,7 +185,7 @@ for (declaration, condition, update)
 }
 ```
 
-The update slot currently supports postfix `++` and `--`.
+The update slot supports prefix and postfix `++` and `--`.
 
 `while` loops are also supported:
 

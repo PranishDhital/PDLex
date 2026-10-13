@@ -1,32 +1,31 @@
 // Test file for the print statement keyword.
 
-print("==================== PRINT STATEMENT TESTS ====================");
+printnl("==================== PRINT STATEMENT TESTS ====================");
 
 // Test 1: print a string literal.
-print("Test 1 PASSED - string literal");
+printnl("Test 1 PASSED - string literal");
 
 // Test 2: print values of every supported variable type.
 int count = 42;
 double ratio = 3.5;
 string name = "PDLex";
 bool enabled = true;
-print("Test 2 - values:" count ratio name enabled);
+printnl("Test 2 - values:" count ratio name enabled);
 
 // Test 3: print multiple arguments; they should be separated by spaces.
-print("Test 3 - multiple arguments:" + "hello" + "world" + 123 + false);
+printnl("Test 3 - multiple arguments:" + "hello" + "world" + 123 + false);
 
-// Test 4: print adds a newline after its output.
-print("Test 4 PASSED - this text is on its own line");
-print("Test 4 PASSED - so is this text");
+// Test 4: print does not add a newline after its output.
+print("Test 4 PASSED - these two messages share a line. ");
+print("This continues on the same line.");
+printnl("");
 
-// Test 5: printnl keeps consecutive output on the same line.
+// Test 5: printnl adds a newline after its output.
 printnl("Test 5 PASSED - printnl output:");
 printnl("first");
 printnl("second");
-print("");
 
 // Test 6: printnl supports multiple arguments and all variable types.
-print("Test 6 PASSED - values:" count , ratio , name , enabled);
-print("");
+printnl("Test 6 PASSED - values:" count , ratio , name , enabled);
 
-print("================== PRINT STATEMENT TESTS DONE ==================");
+printnl("================== PRINT STATEMENT TESTS DONE ==================");

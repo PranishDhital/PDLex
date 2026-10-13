@@ -61,30 +61,30 @@ int sub = x - z;
 int div = x / y;
 
 // Printing results
-print("------------------------Precedence-Based Expression Parser Tests----------------------------------");
+printnl("------------------------Precedence-Based Expression Parser Tests----------------------------------");
 
-print("Original Variable Tests:");
-print("X = " x);
-print("Y = " y);
-print("Z = " z);
-print("Sum of " x " and " y " = " sum);
-print("Multiplication of " x "," y " and " z " = " multi);
-print("Mod % of " x " and " z " = " mod);
-print("Subtraction of " x " and " z " = " sub);
-print("Division of " x " and " y " = " div);
-print("Double addition : " c);
+printnl("Original Variable Tests:");
+printnl("X = " x);
+printnl("Y = " y);
+printnl("Z = " z);
+printnl("Sum of " x " and " y " = " sum);
+printnl("Multiplication of " x "," y " and " z " = " multi);
+printnl("Mod % of " x " and " z " = " mod);
+printnl("Subtraction of " x " and " z " = " sub);
+printnl("Division of " x " and " y " = " div);
+printnl("Double addition : " c);
 
-print("");
-print("Precedence Tests:");
-print("Test 1 - Multiplication precedence (3 + 2 * 5): " result1);
-print("Test 2 - Left associativity of * (2 * 3 * 4): " result2);
-print("Test 3 - Division then multiply (10 / 2 * 3): " result3);
-print("Test 4 - Modulo operation (10 % 3): " result4);
-print("Test 5 - Add/sub left assoc (10 - 3 + 2): " result5);
-print("Test 6 - Complex expr (2 + 3 * 4 - 5 / 2): " result6);
-print("Test 7 - Multiple ops (1 + 2 * 3 + 4): " result7);
-print("Test 8 - Integer division (15 / 4): " result8);
-print("Test 9 - Mixed mult/div (2 * 3 * 4 / 2): " result9);
-print("Test 10 - Sub with div (10 - 8 / 2): " result10);
+printnl("");
+printnl("Precedence Tests:");
+printnl("Test 1 - Multiplication precedence (3 + 2 * 5): " result1);
+printnl("Test 2 - Left associativity of * (2 * 3 * 4): " result2);
+printnl("Test 3 - Division then multiply (10 / 2 * 3): " result3);
+printnl("Test 4 - Modulo operation (10 % 3): " result4);
+printnl("Test 5 - Add/sub left assoc (10 - 3 + 2): " result5);
+printnl("Test 6 - Complex expr (2 + 3 * 4 - 5 / 2): " result6);
+printnl("Test 7 - Multiple ops (1 + 2 * 3 + 4): " result7);
+printnl("Test 8 - Integer division (15 / 4): " result8);
+printnl("Test 9 - Mixed mult/div (2 * 3 * 4 / 2): " result9);
+printnl("Test 10 - Sub with div (10 - 8 / 2): " result10);
 
-print("------------------------All Tests Completed----------------------------------");
+printnl("------------------------All Tests Completed----------------------------------");
